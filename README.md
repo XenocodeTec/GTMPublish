@@ -1,2 +1,2 @@
 # GTMPublish
-Contains published code to host a site
+Contains published code to host GTM site
