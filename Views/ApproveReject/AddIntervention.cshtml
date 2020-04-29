@@ -1,0 +1,194 @@
+﻿@model GTM.Models.InterventionModel
+@{
+    ViewBag.Title = "Add Intervention";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/ApproveReject/Intervention" title="Intervention @GTM.Resources.Resource.List">Intervention</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/ApproveReject/AddIntervention" title="@GTM.Resources.Resource.Add Intervention">@GTM.Resources.Resource.Add Intervention</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddIntervention", "ApproveReject", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddIntervention" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add Intervention</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/ApproveReject/Intervention">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="formone-center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.InterventionId)
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.VehicleId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.VehicleId, new SelectList(ViewBag.VehicleList, "VehicleId", "VehicleNo"), "Select", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.VehicleId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.StructureUnitId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.StructureUnitId, new SelectList(ViewBag.StructureUnitList, "UnitId", "UnitName"), "Select", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.StructureUnitId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ServiceTypeId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.ServiceTypeId, new SelectList(ViewBag.ServiceTypeList, "ServiceTypeId", "ServiceTypeName"), "Select", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ServiceTypeId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.DeadlineDate, htmlAttributes: new { @class = "form-label" })
+                                        <div id="DeadlineDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                            @Html.EditorFor(model => model.DeadlineDate, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            @Html.HiddenFor(model => model.DeadlineDate)
+                                            @Html.ValidationMessageFor(model => model.DeadlineDate, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FindingsRemark, htmlAttributes: new { @class = "form-label" })
+                                        @Html.TextAreaFor(model => model.FindingsRemark, new { @class = "text-height" })
+                                        @Html.ValidationMessageFor(model => model.FindingsRemark, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                @if (Model.InterventionItemList != null)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="title-head b1">
+                                            <h6>Check Item Lists to be repaired</h6>
+                                        </div>
+                                        <div class="div-titles b2">
+                                            <div class="scroll-div">
+                                                <table id="tblCheckListItemDetails" class="table table-hover" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:30%">Item Name</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        @for (var i = 0; i < Model.InterventionItemList.Count; i++)
+                                                         {
+                                                            <tr>
+                                                                <td>
+                                                                    @Html.DisplayFor(item => item.InterventionItemList[i].CheckListItemName)
+                                                                    @Html.HiddenFor(item => item.InterventionItemList[i].CheckListItemName)
+                                                                    @Html.HiddenFor(item => item.InterventionItemList[i].CheckItemId)
+                                                                </td>
+                                                           </tr>
+                                                         }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (Convert.ToInt32(Session["RoleId"]) == 5)
+                                {
+                                    if (!Model.IsApproved)
+                                    {
+                                        <div class="col-sm-3">
+                                            <div id="approvereject">
+                                                <label class="radio-inline">@Html.RadioButtonFor(model => model.IsApproved, true, new { id = "approved", @checked = true }) Approve</label>
+                                                <label class="radio-inline">@Html.RadioButtonFor(model => model.IsApproved, false, new { id = "reject" }) Reject </label>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button type="submit" value="Save" class="btn btn-primary">
+                                            @{var btntext = ""; if (Model.InterventionId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                        </button>
+                                        <a href="~/ApproveReject/Intervention" class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                                }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#DeadlineDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        }).datepicker('update', new Date());
+
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+
+    function GetInterventionItems() {
+        var vehicleId = $("#VehicleId").val();
+
+    }
+
+</script>

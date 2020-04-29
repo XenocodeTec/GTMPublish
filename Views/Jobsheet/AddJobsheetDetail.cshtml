@@ -1,0 +1,438 @@
+﻿@model GTM.Models.JobsheetDetailModel
+@{
+    ViewBag.Title = "Add Jobsheet Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Jobsheet/JobsheetDetail" title="@GTM.Resources.Resource.JobSheetDetails @GTM.Resources.Resource.List">@GTM.Resources.Resource.JobSheetDetails</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Jobsheet/AddJobsheetDetail" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.JobSheetDetails">@GTM.Resources.Resource.Add @GTM.Resources.Resource.JobSheetDetails</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddJobsheetDetail", "Jobsheet", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddJobsheetDetail" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add @GTM.Resources.Resource.JobSheetDetails</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Jobsheet/JobsheetDetail">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="formone-center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.JobsheetDetailId)
+                            @Html.HiddenFor(model => model.JobsheetId)
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="title-head">
+                                        <h6>Vehicle Details</h6>
+                                    </div>
+                                    <div class="div-forms">
+                                        <div class="form-group">
+                                            <label title="Vehicle Number">Vehicle Number :</label>
+                                            <input id="txtVehicleNo" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Make">Make Name :</label>
+                                            <input id="txtMake" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Make Model Name">Make Model Name :</label>
+                                            <input id="txtMakeModelName" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Vehicle Average">Vehicle Average :</label>
+                                            <input id="txtVehicleAverage" disabled="disabled" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="title-head">
+                                        <h6>Other Details</h6>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label title="Service Type Name">Service Type Name :</label>
+                                        <input id="txtServiceTypeName" disabled="disabled" class="form-control" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label title="Structure Unit Name">Structure Unit Name :</label>
+                                        <input id="txtStructureUnitName" disabled="disabled" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="title-head">
+                                        <h6>Jobsheet Details</h6>
+                                    </div>
+                                    <div class="div-forms">
+                                        <div class="form-group">
+                                            <label title="Job Sheet No">Job Sheet No :</label>
+                                            <input id="txtJobSheetNo" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Job Sheet Date">Job Sheet Date :</label>
+                                            <input id="txtJobSheetDate" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Technician Name">Technician Name :</label>
+                                            <input id="txtTechnicianName" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.IssueDate, htmlAttributes: new { @class = "form-label" })
+                                            <div id="IssueDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                                <input id="txtIssueDate" class="form-control" type="text" />
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                @Html.HiddenFor(model => model.IssueDate)
+                                                @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "error" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.IssueTime, htmlAttributes: new { @class = "form-label" })
+                                            <div class="input-group bootstrap-timepicker timepicker">
+                                                @Html.EditorFor(model => model.IssueTime, new { htmlAttributes = new { @class = "form-control input-small" } })
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                                @Html.HiddenFor(model => model.IssueTime)
+                                                @Html.ValidationMessageFor(model => model.IssueTime, "", new { @class = "error" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="title-head">
+                                        <h6>Diagnostic Details</h6>
+                                    </div>
+                                    <div class="div-forms">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Diagnostic, htmlAttributes: new { @class = "form-label" })
+                                            @Html.TextAreaFor(model => model.Diagnostic, new { @class = "text-height" })
+                                            @Html.ValidationMessageFor(model => model.Diagnostic, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="title-head">
+                                        <h6>Cause of Failure</h6>
+                                    </div>
+                                    <div class="div-forms">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.CauseofFailure, htmlAttributes: new { @class = "form-label" })
+                                            @Html.TextAreaFor(model => model.CauseofFailure, new { @class = "text-height" })
+                                            @Html.ValidationMessageFor(model => model.CauseofFailure, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="title-head">
+                                        <h6>Trouble Shooting</h6>
+                                    </div>
+                                    <div class="div-forms">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.TroubleShooting, htmlAttributes: new { @class = "form-label" })
+                                            @Html.TextAreaFor(model => model.TroubleShooting, new { @class = "text-height" })
+                                            @Html.ValidationMessageFor(model => model.TroubleShooting, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.WorkingHours, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.WorkingHours, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.WorkingHours, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.LocationofTroubleshooting, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.LocationofTroubleshooting, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.LocationofTroubleshooting, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div id="divInterventionItems">
+                                    @if (Model.InterventionItemList != null)
+                                    {
+                                        <div class="col-md-12">
+                                            <div class="title-head b1">
+                                                <h6>Check Item Lists to be repaired</h6>
+                                            </div>
+                                            <div class="div-titles b2">
+                                                <div class="scroll-div">
+                                                    <table id="tblCheckListItemDetails" class="table table-hover" width="100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width:30%">Item Name</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            @for (var i = 0; i < Model.InterventionItemList.Count; i++)
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        @Html.DisplayFor(item => item.InterventionItemList[i].CheckListItemName)
+                                                                        @Html.HiddenFor(item => item.InterventionItemList[i].CheckListItemName)
+                                                                        @Html.HiddenFor(item => item.InterventionItemList[i].CheckItemId)
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="clear"></div>
+
+                                <div id="divProductDetails">
+
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "form-label" })
+                                        @Html.TextAreaFor(model => model.Note, new { @class = "text-height" })
+                                        @Html.ValidationMessageFor(model => model.Note, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div id="approvereject">
+                                        <label class="radio-inline">Car Repair Done</label>
+                                        <label class="radio-inline">@Html.RadioButtonFor(model => model.IsOut, true, new { id = "out", @checked = true }) Yes </label>
+                                        <label class="radio-inline">@Html.RadioButtonFor(model => model.IsOut, false, new { id = "stay" }) No </label>
+                                    </div>
+                                </div>
+                                <div style="clear:both;"></div>
+
+                                <div id="outdate" style="display:none;">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.OutDate, htmlAttributes: new { @class = "form-label" })
+                                            <div id="OutDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                                <input id="txtOutDate" class="form-control" type="text" />
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                @Html.HiddenFor(model => model.OutDate)
+                                                @Html.ValidationMessageFor(model => model.OutDate, "", new { @class = "error" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.OutTime, htmlAttributes: new { @class = "form-label" })
+                                            <div class="input-group bootstrap-timepicker timepicker">
+                                                @Html.EditorFor(model => model.OutTime, new { htmlAttributes = new { @class = "form-control input-small" } })
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                                @Html.HiddenFor(model => model.OutTime)
+                                                @Html.ValidationMessageFor(model => model.OutTime, "", new { @class = "error" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 p-t-23 float-center">
+                                    <div class="form-group">
+                                        <button type="submit" value="Save" class="btn btn-primary">
+                                            @{var btntext = ""; if (Model.JobsheetDetailId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                        </button>
+                                        <a href="~/Jobsheet/JobsheetDetail" class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                                }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+
+    function GetJobsheetDetails() {
+        var JobsheetId = $("#JobsheetId").val();
+        $.ajax({
+            url: '/Jobsheet/GetJobsheetDetails?JobsheetId=' + JobsheetId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != '') {
+                    $("#txtVehicleNo").val(result.VehicleNo);
+                    $("#txtMake").val(result.MakeName);
+                    $("#txtMakeModelName").val(result.MakeModelName);
+                    $("#txtVehicleAverage").val(result.VehicleAverage);
+
+                    $("#txtServiceTypeName").val(result.ServiceTypeName);
+                    $("#txtStructureUnitName").val(result.StructureUnitName);
+
+                    $("#txtJobSheetNo").val(result.JobsheetNo);
+                    $("#txtJobSheetDate").val(result.lJobsheetDate);
+                    $("#txtTechnicianName").val(result.TechnicianName);
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $("input[type='radio']").click(function () {
+        var ApprovedValue = $("input[name='IsOut']:checked").val();
+        if (ApprovedValue == "True") {
+            $("#outdate").css("display", "");
+        }
+        else {
+            $("#outdate").css("display", "none");
+        }
+    });
+
+    function CalculateWorkingHours() {
+        debugger;
+        var IssueDate = $("#txtIssueDate").val();
+        var IssueTime = $("#IssueTime").val();
+        var OutDate = $("#txtOutDate").val();
+        var OutTime = $("#OutTime").val();
+
+        $.ajax({
+            url: '/Jobsheet/CalculateWorkingHours?IssueDate=' + IssueDate + '&IssueTime=' + IssueTime + '&OutDate=' + OutDate + '&OutTime='+ OutTime,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                debugger;
+                if (result != '') {
+                    $("#WorkingHours").val(result);
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#IssueDate").datepicker({
+            todayBtn: 1,
+            autoclose: true,
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#OutDate').datepicker('setStartDate', minDate);
+        });
+
+        $("#OutDate").datepicker({
+            todayBtn: 1,
+            autoclose: true,
+        }).on('changeDate', function (selected) {
+            CalculateWorkingHours();
+        });
+
+        $('#IssueTime').timepicker();
+        $('#OutTime').timepicker();
+
+        if (@Model.JobsheetDetailId != 0) {
+            $.ajax({
+                url: '/Jobsheet/_AddProductDetails?ProductId=0&ProductName=' + '' + '&Quantity=0',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    if (result != '') {
+                        $("#divProductDetails").html(result);
+                    }
+                },
+                error: function (data)
+                {
+                    toastr.error(data,"GTM");
+                }
+            });
+        }
+
+        $.ajax({
+            url: '/Jobsheet/_ShowProductDetails',
+            type: 'GET',
+            dataType: 'html',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function () {
+                proccessingWindow();
+            },
+            success: function (result) {
+                $("#divProductDetails").html(result);
+            },
+            complete: function (data) {
+                closeingProccessingWindow();
+            },
+            error: function (data) {
+                toastr.error("Please refresh page.", "Sales Tracker");
+            }
+        });
+
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>
+
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}

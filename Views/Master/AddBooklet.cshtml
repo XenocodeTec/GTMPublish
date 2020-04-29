@@ -1,0 +1,173 @@
+﻿@model GTM.Models.BookletModel
+@{
+    ViewBag.Title = "Add Booklet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/State" title="@GTM.Resources.Resource.Booklet @GTM.Resources.Resource.List">@GTM.Resources.Resource.Booklet</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddState" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.Booklet">@GTM.Resources.Resource.Add @GTM.Resources.Resource.Booklet</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddBooklet", "Master", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddBooklet" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add @GTM.Resources.Resource.Booklet</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Master/Booklet">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="form_center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.BookletId)
+                            @Html.HiddenFor(model => model.BranchId)
+
+                            <div class="form-group">
+                                @Html.Label(GTM.Resources.Resource.BookletNo, htmlAttributes: new { @class = "form-label" })
+                                @Html.EditorFor(model => model.BookletNo, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BookletNo, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(GTM.Resources.Resource.StartBookletReceiptNo, htmlAttributes: new { @class = "form-label" })
+                                @Html.EditorFor(model => model.BookletStartNo, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BookletStartNo, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(GTM.Resources.Resource.EndBookletReceiptNo, htmlAttributes: new { @class = "form-label" })
+                                @Html.EditorFor(model => model.BookletEndNo, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BookletEndNo, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                    @Html.CheckBoxFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "error" })
+                                </div>
+                                @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "" })
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" value="Save" class="btn btn-primary">
+                                    @{var btntext = ""; if (Model.BookletId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                </button>
+                                <a href="~/Master/Booklet" class="btn btn-danger">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                        }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    $("#BookletNo").keyup(function () {
+        CheckBookletName($("#BookletNo").val(), $("#BookletId").val(), $("#BranchId").val());
+    });
+
+    $("#BookletNo").blur(function () {
+        if ($('#BookletNo-error').html() == '') {
+            CheckBookletName($("#BookletNo").val(), $("#BookletId").val(), $("#BranchId").val());
+        }
+    });
+
+    $("#BookletStartNo").keyup(function () {
+        $("#BookletEndNo").removeAttr("disabled");
+        var startNo = $("#BookletStartNo").val();
+        var endNo = parseInt(startNo) + parseInt(24);
+        $("#BookletEndNo").val(endNo);
+        $("#BookletEndNo").attr("disabled", "disabled");
+        CheckBookletStartNo($("#BookletStartNo").val(), $("#BookletId").val());
+    });
+
+    $("#BookletStartNo").blur(function () {
+        $("#BookletEndNo").removeAttr("disabled");
+        var startNo = $("#BookletStartNo").val();
+        var endNo = parseInt(startNo) + parseInt(24);
+        $("#BookletEndNo").val(endNo);
+        $("#BookletEndNo").attr("disabled", "disabled");
+    });
+
+    function CheckBookletName(BookletNo, BookletId, BranchId) {
+        $.ajax({
+            url: '/Master/CheckBookletName?BookletNo=' + BookletNo + '&BookletId=' + BookletId + '&BranchId=' + BranchId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    toastr.warning(result.message,"GTM");
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    function CheckBookletStartNo(BookletStartNo, BookletId) {
+        $.ajax({
+            url: '/Master/CheckBookletStartNo?BookletStartNo=' + BookletStartNo + '&BookletId=' + BookletId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    toastr.warning(result.message,"GTM");
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

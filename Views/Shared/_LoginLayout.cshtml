@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>GTM V 1.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    @Scripts.Render("~/bundles/jquery")
+    @Styles.Render("~/bundles/css")
+
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="~/Content/ico/minus.png">
+</head>
+
+<body class="pace-done" style="overflow: visible;">
+    <div class="pace-progress" data-progress-text="100%" data-progress="99" style="width: 100%;">
+        <div class="pace-progress-inner"></div>
+    </div>
+    <div class="pace-activity"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div id="status">&nbsp;</div>
+    </div>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <div style="text-align:center;margin:0 auto;margin-top:4%;">
+        <div class="row">
+            <div class="col-sm-6">
+                <h6 class="foot-name">
+                    NIT Complex,148,IMSR Technology Building,Sakkardara,Ayurvedic Layout,Nagpur-440034
+                </h6>
+                <h6 class="foot-name">GTM 1.0 Powered by &copy; Xenocode Technologies 2020</h6>
+            </div>
+            <div class="col-sm-6">
+                <p class="tex-call"><img src="../Content/img/viber.png">&nbsp; +91-9823556473 , +91-8080607122 </p>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/scripts")
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        $(function () {
+            $("#test1").gmap3({
+                marker: {
+                    latLng: [-7.782893, 110.402645],
+                    options: {
+                        draggable: true
+                    },
+                    events: {
+                        dragend: function (marker) {
+                            $(this).gmap3({
+                                getaddress: {
+                                    latLng: marker.getPosition(),
+                                    callback: function (results) {
+                                        var map = $(this).gmap3("get"),
+                                            infowindow = $(this).gmap3({
+                                                get: "infowindow"
+                                            }),
+                                            content = results && results[1] ? results && results[1].formatted_address : "no address";
+                                        if (infowindow) {
+                                            infowindow.open(map, marker);
+                                            infowindow.setContent(content);
+                                        } else {
+                                            $(this).gmap3({
+                                                infowindow: {
+                                                    anchor: marker,
+                                                    options: {
+                                                        content: content
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                },
+                map: {
+                    options: {
+                        zoom: 15
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

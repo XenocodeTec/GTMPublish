@@ -1,0 +1,126 @@
+﻿@model GTM.Models.StateModel
+@{
+    ViewBag.Title = "Add State";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/State" title="@GTM.Resources.Resource.State @GTM.Resources.Resource.List">@GTM.Resources.Resource.State</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddState" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.State">@GTM.Resources.Resource.Add @GTM.Resources.Resource.State</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddState", "Master", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddState" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add @GTM.Resources.Resource.State</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="#basicClose">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="form_center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.StateId)
+
+                            <div class="form-group">
+                                @Html.Label(GTM.Resources.Resource.Country, htmlAttributes: new { @class = "form-label" })
+                                @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.CountryList, "CountryId", "CountryName"), "Country Name", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(GTM.Resources.Resource.State, htmlAttributes: new { @class = "form-label" })
+                                @Html.EditorFor(model => model.StateName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.StateName, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" value="Save" class="btn btn-primary">
+                                    @{var btntext = ""; if (Model.StateId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                </button>
+                                <a href="~/Master/State" class="btn btn-danger">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    $("#StateName").keyup(function () {
+        CheckStateName($("#StateName").val(), $("#CountryId").val(), $("#StateId").val());
+    });
+
+    $("#StateName").blur(function () {
+        if ($('#StateName-error').html() == '') {
+            CheckStateName($("#StateName").val(), $("#CountryId").val(), $("#StateId").val());
+        }
+    });
+
+    function CheckStateName(StateName, CountryId, StateId) {
+        $.ajax({
+            url: '/Master/CheckStateName?StateName=' + StateName + '&CountryId=' + CountryId + '&StateId=' + StateId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    toastr.error(result.message, "GTM");
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

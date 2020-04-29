@@ -1,0 +1,151 @@
+﻿@model GTM.Models.ProcurementDetailModel
+@{
+    ViewBag.Title = "Procurement " + GTM.Resources.Resource.List;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Procurement/Procurement" title="Procurement @GTM.Resources.Resource.List">Procurement</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Procurement/Procurement" title="@GTM.Resources.Resource.Add Procurement">@GTM.Resources.Resource.Add Procurement</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control" />
+        </div>
+    </li>
+</ul>
+
+<div class="content-wrap">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="nest" id="DripClose">
+                <div class="title-alt">
+                    <h6>Procurement @GTM.Resources.Resource.List</h6>
+                    <div class="titleClose">
+                        <a class="gone" href="~/Procurement/Procurement">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+
+                    <div class="titleToggle">
+                        <a class="nav-toggle-alt" href="#Drip">
+                            <span class="entypo-up-open"></span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="body-nest" id="Drip">
+                    <section data-valign="center" data-cols="1" data-name="preview">
+                        <div class="entypo-tooltip">
+                            <header class="box-typical-header">
+                                <div class="clear"></div>
+                                <div id="divSearch" class="tbl-row">
+                                    <div class="clear"></div>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="label-container"> From Date </label>
+                                            <div class="form-group">
+                                                <div id="FromDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                                    <input id="txtFromDate" class="form-control" type="text" />
+                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    <span id="FromDate-error" class="error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <label class="label-container"> To Date </label>
+                                            <div class="form-group">
+                                                <div id="ToDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                                    <input id="txtToDate" class="form-control" type="text" />
+                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    <span id="ToDate-error" class="error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <label class="label-container"> Supplier Name </label>
+                                            <div class="form-group">
+                                                @Html.DropDownList("SupplierId", new SelectList(ViewBag.SupplierList, "SupplierId", "SupplierName"), "Select", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <div class="row text-center">
+                                        <div class="col-sm-12">
+                                            <button type="button" value="Search" class="btn btn-primary" onclick="FillPaymentFillPayment()"><span class="glyphicon glyphicon-search" style="color:#ffffff"></span>&nbsp;@GTM.Resources.Resource.Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </header>
+                            <div id="PartialDiv"></div>
+                        </div>
+                    </section>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    var searchtext = '';
+    $(function () {
+        FillPaymentFillPayment();
+    });
+
+    function FillPaymentFillPayment() {
+        var fromDate = '';
+        var toDate = '';
+        var supplierId = 0;
+
+        supplierId = $("#SupplierId").val();
+        fromDate = $("#txtFromDate").val();
+        toDate = $("#txtToDate").val();
+
+        $.ajax({
+            url: '/Procurement/_SearchProcurement?searchText=' + searchtext + '&FromDate=' + fromDate + '&ToDate=' + toDate + '&SupplierId=' + supplierId,
+            type: 'GET',
+            dataType: 'html',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                $("#PartialDiv").html(result);
+            },
+            error: function (data) {
+                toastr.warning("Please refresh page.","GTM");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

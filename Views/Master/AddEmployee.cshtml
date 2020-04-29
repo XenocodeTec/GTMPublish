@@ -1,0 +1,477 @@
+﻿@model GTM.Models.EmployeeModel
+@{
+    ViewBag.Title = "Add Employee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <script src="~/Scripts/CommonScript.js"></script>
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/Employee" title="@GTM.Resources.Resource.Employee @GTM.Resources.Resource.List">@GTM.Resources.Resource.Employee</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddEmployee" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.Employee">@GTM.Resources.Resource.Add @GTM.Resources.Resource.Employee</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddEmployee", "Master", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddEmployee" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add @GTM.Resources.Resource.Employee</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Master/Employee">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="formone-center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.EmployeeId)
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.DepartmentId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.DepartmentId, new SelectList(ViewBag.DepartmentList, "DepartmentId", "DepartmentName"), "Select", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.DepartmentId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.EmployeeTypeId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.EmployeeTypeId, new SelectList(ViewBag.EmployeeTypeList, "EmployeeTypeId", "EmployeeTypeName"), "Select", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.EmployeeTypeId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.RoleId, new SelectList(ViewBag.RoleList, "RoleId", "RoleName"), "Select", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.EmployeeCode, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.EmployeeCode, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.EmployeeCode, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.RFID, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.RFID, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.RFID, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MiddleName, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "form-label" })
+                                        @Html.TextAreaFor(model => model.Address, new { @class = "text-height" })
+                                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.CountryId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.CountryList, "CountryId", "CountryName"), GTM.Resources.Resource.Select, new { @class = "form-control", onchange = "javascript:FillState();" })
+                                        @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.StateId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.StateId, new SelectList(ViewBag.StateList, "StateId", "StateName"), GTM.Resources.Resource.Select, new { @class = "form-control", onchange = "javascript:FillCity();" })
+                                        @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.CityId, new SelectList(ViewBag.CityList, "CityId", "CityName"), GTM.Resources.Resource.Select, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.PhoneNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.PhoneNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PhoneNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MobileNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.AlternateNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.AlternateNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.AlternateNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.EmergencyNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.EmergencyNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.EmergencyNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.EmailId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.EmailId, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.DateofBirth, htmlAttributes: new { @class = "form-label" })
+                                        <div id="DateofBirth" class="input-group date" data-date-format="dd-mm-yyyy">
+                                            @Html.EditorFor(model => model.DateofBirth, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.HiddenFor(model => model.DateofBirth)
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            @Html.ValidationMessageFor(model => model.DateofBirth, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.BloodGroup, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.BloodGroup, new SelectList(ViewBag.BloodGroupList, "BloodGroupName", "BloodGroupName"), GTM.Resources.Resource.Select, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.BloodGroup, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.CanDrive, htmlAttributes: new { @class = "form-label" })
+                                        @Html.CheckBoxFor(model => model.CanDrive)
+                                        @Html.ValidationMessageFor(model => model.CanDrive, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.LicenceTypeId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.LicenceTypeId, new SelectList(ViewBag.LicenceTypeList, "LicenseTypeId", "LicenseTypeName"), GTM.Resources.Resource.Select, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.LicenceTypeId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.LicenceNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.LicenceNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.LicenceNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.LicenceIssueDate, htmlAttributes: new { @class = "form-label" })
+                                        <div id="LicenceIssueDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                            @Html.EditorFor(model => model.LicenceIssueDate, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.HiddenFor(model => model.LicenceIssueDate)
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            @Html.ValidationMessageFor(model => model.LicenceIssueDate, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.LicenceExpiryDate, htmlAttributes: new { @class = "form-label" })
+                                        <div id="LicenceExpiryDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                            @Html.EditorFor(model => model.LicenceExpiryDate, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.HiddenFor(model => model.LicenceExpiryDate)
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            @Html.ValidationMessageFor(model => model.LicenceExpiryDate, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Experience, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.Experience, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Experience, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.LicenceIssuingAuthority, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.LicenceIssuingAuthority, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.LicenceIssuingAuthority, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="LicenceDocuement">License Document :</label>
+                                        <input id="LicenceDocuement" name="files" type="file" accept='application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document' />
+                                        <p class="mandatoryFields">Upload file must be less than or equals to 5 mb</p>
+                                        <span id="LicenceDocuement-error" class="text-danger"></span>
+
+                                        @if (Model.LicenceDocuement != null)
+                                        {
+                                            <span>Click <a href="/Master/DownloadFile?filePath=@Model.LicenceDocuement">here</a> to download proposal file</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="IdProof">Identity Proof :</label>
+                                        <input id="IdProof" name="files" type="file" accept='image/*' />
+                                        <p class="mandatoryFields">Upload file must be less than or equals to 5 mb</p>
+                                        <span id="IdProof-error" class="text-danger"></span>
+                                        @if (Model.IdProof != null)
+                                        {
+                                            <span>Click <a href="/Master/DownloadFile?filePath=@Model.IdProof">here</a> to download proposal file</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label" for="DriverPhoto">Photo :</label>
+                                        <input id="DriverPhoto" name="files" type="file" accept='image/*' />
+                                        <p class="mandatoryFields">Upload file must be less than or equals to 5 mb</p>
+                                        <span id="DriverPhoto-error" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <p><br /></p>
+                                    <div class="col-md-12 img-preview text-center">
+                                        <img id="imgphoto" src="@Model.DriverPhoto" class="width-max-100 height-100" />
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p></p>
+                                        <a href="#" id="btnDeletePhoto" class="fa fa-trash">&nbsp; Delete</a>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            @Html.CheckBoxFor(model => model.IsActive)
+                                            @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "error" })
+                                        </div>
+                                        @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <button type="submit" value="Save" class="btn btn-primary">
+                                            @{var btntext = ""; if (Model.EmployeeId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                        </button>
+                                        <a href="~/Master/Employee" class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                                }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    $("#IdProof").change(function () {
+        var iSize = ($(this)[0].files[0].size / 1024);
+        iSize = (Math.round((iSize / 1024) * 100) / 100);
+
+        if (iSize > 5) {
+            $("#IdProof").val(null);
+            $("#IdProof-error").html("The image size must be less than 5 mb.");
+        } else {
+            $("#IdProof-error").html("");
+        }
+    });
+
+    $("#DriverPhoto").change(function () {
+
+        debugger;
+        var iSize = ($(this)[0].files[0].size / 1024);
+        iSize = (Math.round((iSize / 1024) * 100) / 100);
+
+        if (iSize > 4) {
+            $("#DriverPhoto").val(null);
+            $('#DriverPhoto').attr('src', "#");
+            $("#DriverPhoto-error").html("The image size must be less than 4 mb.");
+        } else {
+            $("#DriverPhoto-error").html("");
+            PreviewImage(this, 'imgphoto');
+        }
+    });
+
+    function PreviewImage(input, img) {
+        debugger;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#' + img).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#btnDeletePhoto").click(function () {
+        if ($('#imgphoto').attr('src').trim() == '' || $('#imgphoto').attr('src').trim() == '#') { return; }
+        if (confirm("Do you want to delete photo?")) {
+            $('#imgphoto').attr('src', "#");
+            $("#DriverPhoto").val(null);
+        }
+    });
+
+    function FillState() {
+        var selectedval = $("#CountryId").val();
+        CommonScript.FillState(selectedval);
+    }
+
+    function FillCity() {
+        var selectedval = $("#StateId").val();
+        CommonScript.FillCity(selectedval);
+    }
+
+    $("#MobileName").keyup(function () {
+        CheckEmployeeName($("#MobileName").val(), $("#EmployeeId").val(), $("#BranchId").val());
+    });
+
+    $("#MobileName").blur(function () {
+        if ($('#MobileName-error').html() == '') {
+            CheckEmployeeName($("#MobileName").val(), $("#EmployeeId").val(), $("#BranchId").val());
+        }
+    });
+
+    function CheckEmployeeName(MobileName, EmployeeId) {
+        $.ajax({
+            url: '/Master/CheckEmployeeName?MobileName=' + MobileName + '&EmployeeId=' + EmployeeId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    toastr.error(result.message, "GTM");
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#DateofBirth").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        }).datepicker('update', new Date());
+
+        $("#LicenceIssueDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        }).datepicker('update', new Date());
+
+        $("#LicenceExpiryDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        }).datepicker('update', new Date());
+
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

@@ -1,0 +1,200 @@
+﻿@model GTM.Models.JobsheetModel
+@{
+    ViewBag.Title = "Add Jobsheet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/Jobsheet" title="@GTM.Resources.Resource.JobSheetDetails @GTM.Resources.Resource.List">@GTM.Resources.Resource.JobSheetDetails</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddJobsheet" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.JobSheetDetails">@GTM.Resources.Resource.Add @GTM.Resources.Resource.JobSheetDetails</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddJobsheet", "Jobsheet", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddJobsheet" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add @GTM.Resources.Resource.JobSheetDetails</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Jobsheet/Jobsheet">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="formone-center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.JobsheetId)
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="title-head">
+                                        <h6>Vehicle Details</h6>
+                                    </div>
+                                    <div class="div-forms">
+                                        <div class="form-group">
+                                            <label title="Vehicle Number">Vehicle Number :</label>
+                                            @Html.DropDownListFor(model => model.VehicleId, new SelectList(ViewBag.VehicleList, "VehicleId", "VehicleNo"), "Select", new { @class = "form-control", onchange = "javascript:GetVehicleDetails();" })
+                                            @Html.ValidationMessageFor(model => model.VehicleId, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Make">Make Name :</label>
+                                            <input id="txtMake" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Make Model Name">Make Model Name :</label>
+                                            <input id="txtMakeModelName" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Vehicle Average">Vehicle Average :</label>
+                                            <input id="txtVehicleAverage" disabled="disabled" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="title-head">
+                                        <h6>Other Details</h6>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ServiceTypeId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.ServiceTypeId, new SelectList(ViewBag.ServiceTypeList, "ServiceTypeId", "ServiceTypeName"), "Select", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ServiceTypeId, "", new { @class = "error" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.StructureUnitId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.StructureUnitId, new SelectList(ViewBag.UnitList, "UnitId", "UnitName"), "Select", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.StructureUnitId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="title-head">
+                                        <h6>Jobsheet Details</h6>
+                                    </div>
+                                    <div class="div-forms">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.JobsheetNo, htmlAttributes: new { @class = "form-label" })
+                                            @Html.EditorFor(model => model.JobsheetNo, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                            @Html.HiddenFor(model => model.JobsheetNo)
+                                            @Html.ValidationMessageFor(model => model.JobsheetNo, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.JobsheetDate, htmlAttributes: new { @class = "form-label" })
+                                            <div id="JobsheetDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                                @Html.EditorFor(model => model.JobsheetDate, new { htmlAttributes = new { @class = "form-control" } })
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                @Html.HiddenFor(model => model.JobsheetDate)
+                                                @Html.ValidationMessageFor(model => model.JobsheetDate, "", new { @class = "error" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.TechnicianId, htmlAttributes: new { @class = "form-label" })
+                                            @Html.DropDownListFor(model => model.TechnicianId, new SelectList(ViewBag.TechnicianList, "EmployeeId", "FirstName"), "Select", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.TechnicianId, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 p-t-23 float-center">
+                                    <div class="form-group">
+                                        <button type="submit" value="Save" class="btn btn-primary">
+                                            @{var btntext = ""; if (Model.JobsheetId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                        </button>
+                                        <a href="~/Jobsheet/Jobsheet" class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    function GetVehicleDetails() {
+        var vehicleId = $("#VehicleId").val();
+        $.ajax({
+            url: '/Jobsheet/GetVehicleDetails?VehicleId=' + vehicleId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != '') {
+                    $("#txtMake").val(result.MakeName);
+                    $("#txtMakeModelName").val(result.MakeModelName);
+                    $("#txtVehicleAverage").val(result.VehicleAverage);
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#JobsheetDate").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startDate: '+d'
+        }).datepicker('update', new Date());
+
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>
+
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}

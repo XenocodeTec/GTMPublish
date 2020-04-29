@@ -1,0 +1,141 @@
+﻿@model GTM.Models.MakeModelModel
+@{
+    ViewBag.Title = "Add Make Model";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/MakeModel" title="@GTM.Resources.Resource.Make @GTM.Resources.Resource.List">@GTM.Resources.Resource.Make</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddMakeModel" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.Make">@GTM.Resources.Resource.Add @GTM.Resources.Resource.Make</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddMakeModel", "Master", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddMakeModel" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add @GTM.Resources.Resource.Make</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Master/Branch">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="form_center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.MakeModelId)
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.MakeId, htmlAttributes: new { @class = "form-label" })
+                                @Html.DropDownListFor(model => model.MakeId, new SelectList(ViewBag.MakeList, "MakeId", "MakeName"), "Make Name", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.MakeId, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ModelName, htmlAttributes: new { @class = "form-label" })
+                                @Html.EditorFor(model => model.ModelName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ModelName, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "form-label" })
+                                @Html.TextAreaFor(model => model.Remark, new { @class = "text-height"  })
+                                @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                    @Html.CheckBoxFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "error" })
+                                </div>
+                                @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "" })
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" value="Save" class="btn btn-primary">
+                                    @{var btntext = ""; if (Model.MakeModelId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                </button>
+                                <a href="~/Master/MakeModel" class="btn btn-danger">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                        }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    $("#ModelName").keyup(function () {
+        CheckMakeModelName($("#ModelName").val(), $("#MakeModelId").val(), $("#BranchId").val());
+    });
+
+    $("#ModelName").blur(function () {
+        if ($('#ModelName-error').html() == '') {
+            CheckMakeModelName($("#ModelName").val(), $("#MakeModelId").val(), $("#BranchId").val());
+        }
+    });
+
+    function CheckMakeName(ModelName, MakeModelId, BranchId) {
+        $.ajax({
+            url: '/Master/CheckMakeModelName?MakeModelName=' + ModelName + '&MakeModelId=' + MakeModelId + '&BranchId=' + BranchId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    toastr.error(result.message, "GTM");
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

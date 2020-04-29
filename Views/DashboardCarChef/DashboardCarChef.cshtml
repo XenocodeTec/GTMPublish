@@ -1,0 +1,729 @@
+﻿@{
+    ViewBag.Title = "Car Manager Dashboad";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dashboard-count {
+        margin-top: 3%;
+    }
+
+    .order {
+        background-color: #45b6b0 !important;
+        padding: 15px 6px 15px 6px;
+        color: rgba(0, 0, 0, 0.4);
+        position: relative;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
+    .revenue {
+        background-color: #ffa200;
+        padding: 15px 6px 15px 6px;
+        color: rgba(0, 0, 0, 0.4);
+        position: relative;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
+    .profit {
+        background-color: #ff6b6b;
+        padding: 15px 6px 15px 6px;
+        color: rgba(0, 0, 0, 0.4);
+        position: relative;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        z-index: 0;
+    }
+
+    .member {
+        background-color: #65c3df !important;
+        padding: 15px 6px 15px 6px;
+        color: rgba(0, 0, 0, 0.4);
+        position: relative;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
+        .member .headline h3 {
+            font-size: 15px;
+            font-weight: normal;
+            margin: 0;
+            padding: 15px;
+            text-transform: uppercase;
+        }
+
+    .headline h3 {
+        text-align: center;
+        padding-top: 15% !important;
+    }
+
+    .profit .headline h3 span {
+        background-color: #bd4242;
+        border-radius: 20px;
+        padding: 0 10px;
+    }
+
+    .revenue .headline h3 span {
+        background-color: #c38416;
+        border-radius: 20px;
+        padding: 0 5px;
+    }
+
+    .order .headline h3 span {
+        background-color: #2e9893;
+        border-radius: 20px;
+        padding: 0 10px;
+    }
+
+    .member .headline h3 span {
+        background-color: #4aa4bf;
+        border-radius: 20px;
+        padding: 0 10px;
+    }
+
+    .value {
+        border-radius: 6px;
+        font: 42px Open Sans !important;
+        letter-spacing: -3px;
+        margin: 43px auto 0 !important;
+        position: relative;
+        text-align: center;
+        color: #fbfbfb !important;
+    }
+
+    .body-nest {
+        padding: 0px;
+        background: none repeat scroll 0 0 #ffffff;
+        border-radius: 0 0 4px 4px;
+        border: 1px solid #d4d4d4;
+        margin: 11px;
+    }
+
+    h3.car-name {
+        line-height: 24px;
+        text-transform: capitalize !important;
+        text-align: left;
+        font-size: 17px !important;
+        font-weight: 500 !important;
+        padding-top: 10px !important;
+    }
+
+    .valuetext {
+        margin-top: 17px !important;
+        margin-bottom: 20px !important;
+    }
+
+    a.click-menu {
+        text-align: center;
+        color: white;
+        text-decoration: underline;
+        font-size: 14px;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .remind {
+        background-color: #ff7070;
+        padding: 15px 6px 15px 6px;
+        color: rgba(0, 0, 0, 0.4);
+        position: relative;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
+    .notice {
+        background-color: #d79fff;
+        padding: 15px 6px 15px 6px;
+        color: rgba(0, 0, 0, 0.4);
+        position: relative;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
+    h3.car-name {
+        line-height: 24px;
+        text-transform: capitalize !important;
+        text-align: left;
+        font-size: 17px !important;
+        font-weight: 500 !important;
+        padding-top: 10px !important;
+        color: #fff;
+        position: absolute;
+        width: 100%;
+        height: 40px;
+    }
+
+    .div-table {
+        background: #e2dcdc;
+        padding: 7px;
+        margin-top: -11px;
+        margin-bottom: 7px;
+    }
+
+    .trip {
+        background-color: #79ad86;
+        padding: 15px 6px 15px 6px;
+        color: rgba(0, 0, 0, 0.4);
+        position: relative;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+</style>
+
+<!-- BREADCRUMB -->
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="#" title="Sample page 1">
+            Home
+        </a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="#" title="Sample page 1">Dashboard</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+<!-- END OF BREADCRUMB -->
+
+<div class="content-wrap">
+    <div class="dashboard-count">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="member" id="memberClose">
+                    <div class="titleClose float-right">
+                        <a href="#profitClose" class="gone">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="headline col-sm-5">
+                                <h3 class="car-name">
+                                    New Requests
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 text-right">
+                            <div class="value valuetext">
+                                45
+                            </div>
+
+                            <div class="clear"></div>
+                            <a href="#" class="click-menu" onclick="myCar()">Click Here</a>
+
+                            <script>
+                                function myCar() {
+                                    var x = document.getElementById("myFrist");
+                                    if (x.style.display === "none") {
+                                        x.style.display = "block";
+                                    } else {
+                                        x.style.display = "none";
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clear"></div>
+                <div id="myFrist" class="div-table" style="display:none;">
+                    This is my DIV element.
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="order" id="orderClose">
+                    <div class="titleClose float-right">
+                        <a href="#profitClose" class="gone">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="headline ">
+                                <h3 class="car-name">
+                                    Status of ongoing requests
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5 text-right">
+                            <div class="value valuetext">
+                                34
+                            </div>
+                            <div class="clear"></div>
+                            <a href="#" class="click-menu">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="remind" id="revClose">
+                    <div class="titleClose float-right">
+                        <a href="#profitClose" class="gone">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="headline ">
+                                <h3 class="car-name">
+                                    Reminder
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5 text-right">
+                            <div class="value valuetext">
+                                5
+                            </div>
+                            <div class="clear"></div>
+                            <a href="#" class="click-menu">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="notice" id="noticeClose">
+                    <div class="titleClose float-right">
+                        <a href="#profitClose" class="gone">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="headline ">
+                                <h3 class="car-name">
+                                    Notification
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5 text-right">
+                            <div class="value valuetext">
+                                5
+                            </div>
+                            <div class="clear"></div>
+                            <a href="#" class="click-menu">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="clear"></div>
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="nest">
+                        <div class="title-alt">
+                            <h6>
+                                Car View
+                            </h6>
+                            <div class="titleClose">
+                                <a class="gone" href="#tabClose">
+                                    <span class="entypo-cancel"></span>
+                                </a>
+                            </div>
+                            <div class="titleToggle">
+                                <a class="nav-toggle-alt" href="#tab">
+                                    <span class="entypo-up-open"></span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <link rel="stylesheet" type="text/css" href="http://www.jqchart.com/jquery/chart/Content/jquery.jqChart.css" />
+                        <script src="~/Content/jquery.jqChart.min.js" type="text/javascript"></script>
+
+                        <script lang="javascript" type="text/javascript">
+                            $(document).ready(function () {
+                                var background = {
+                                    type: 'linearGradient',
+                                    x0: 0,
+                                    y0: 0,
+                                    x1: 0,
+                                    y1: 1,
+                                    colorStops: [{ offset: 0, color: '#d2e6c9' },
+                                                 { offset: 1, color: 'white' }]
+                                };
+
+                                $('#jqChart').jqChart({
+                                    // title: { text: 'Doughnut Chart' },
+                                    legend: { title: 'Countries' },
+                                    border: { strokeStyle: '#FFFF' },
+                                    // background: background,
+                                    animation: { duration: 1 },
+                                    shadows: {
+                                        enabled: true
+                                    },
+                                    series: [
+                                        {
+                                            type: 'doughnut',
+                                            innerExtent: 0.5,
+                                            outerExtent: 1.0,
+                                            fillStyles: ['#418CF0', '#FCB441', '#E0400A', '#056492', '#BFBFBF', '#1A3B69', '#FFE382'],
+                                            labels: {
+                                                stringFormat: '%.1f%%',
+                                                valueType: 'percentage',
+                                                font: '15px sans-serif',
+                                                fillStyle: 'white'
+                                            },
+                                            data: [['car', 65], ['Vehical', 58], ['available car', 30]]
+                                        }
+                                    ]
+                                });
+                            });
+                        </script>
+
+                        <div style="height:422px;">
+                            <div id="jqChart" style="width: 500px; height: 300px;">
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="nest">
+                        <div class="title-alt">
+                            <h6>chart</h6>
+                            <div class="titleClose">
+                                <a class="gone" href="#tabClose">
+                                    <span class="entypo-cancel"></span>
+                                </a>
+                            </div>
+                            <div class="titleToggle">
+                                <a class="nav-toggle-alt" href="#tab">
+                                    <span class="entypo-up-open"></span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <link rel="stylesheet" href="~/Content/css/bar.chart.min.css" />
+                        <script src='https://d3js.org/d3.v4.min.js'></script>
+                        <script src="~/Content/jquery.bar.chart.min.js"></script>
+                        <div id="chtAnimatedBarChart" class="bcBar"></div>
+                        @*<script>
+                            var chart;
+                            $(function () {
+                                initChart();
+                            });
+
+                            initChart = function () {
+                                var data = getData();
+                                chart = $('#chtAnimatedBarChart').animatedBarChart({
+                                    data: data,
+                                    params: {
+                                        group_name: 'group_name',
+                                        name: 'month',
+                                        value: 'employees_no'
+                                    },
+                                    bars: {
+                                        hover_name_text: 'month',
+                                        hover_value_text: 'employees no'
+                                    },
+                                    x_grid_lines: false
+                                });
+                            }
+
+                            initChartAll = function () {
+                                var data = getData();
+                                chart.updateChart({ data: data });
+                            }
+
+                            initChartSome = function () {
+                                var data = getFilteredData();
+                                chart.updateChart({ data: data });
+                            }
+
+                            getData = function () {
+                                return [
+                                   { "id": 1, "group_name": "Google", "month": "Jan", "employees_no": 38367 },
+                                   { "id": 2, "group_name": "Google", "month": "Feb", "employees_no": 32684 },
+                                   { "id": 3, "group_name": "Google", "month": "Mar", "employees_no": 28236 },
+                                   { "id": 4, "group_name": "Google", "month": "Apr", "employees_no": 44205 },
+                                   { "id": 5, "group_name": "Google", "month": "May", "employees_no": 3357 },
+                                   { "id": 6, "group_name": "Google", "month": "Jun", "employees_no": 3511 },
+
+                                   { "id": 13, "group_name": "Apple", "month": "Jan", "employees_no": 28827 },
+                                   { "id": 14, "group_name": "Apple", "month": "Feb", "employees_no": 13671 },
+                                   { "id": 15, "group_name": "Apple", "month": "Mar", "employees_no": 27670 },
+                                   { "id": 16, "group_name": "Apple", "month": "Apr", "employees_no": 6274 },
+                                   { "id": 17, "group_name": "Apple", "month": "May", "employees_no": 12563 },
+                                   { "id": 18, "group_name": "Apple", "month": "Jun", "employees_no": 31263 },
+                                   { "id": 25, "group_name": "Microsoft", "month": "Jan", "employees_no": 38674 },
+                                   { "id": 26, "group_name": "Microsoft", "month": "Feb", "employees_no": 9595 },
+                                   { "id": 27, "group_name": "Microsoft", "month": "Mar", "employees_no": 7520 },
+                                   { "id": 28, "group_name": "Microsoft", "month": "Apr", "employees_no": 2568 },
+                                   { "id": 29, "group_name": "Microsoft", "month": "May", "employees_no": 6583 },
+                                   { "id": 30, "group_name": "Microsoft", "month": "Jun", "employees_no": 44485 },
+                                   { "id": 37, "group_name": "Samsung", "month": "Jan", "employees_no": 40110 },
+                                   { "id": 38, "group_name": "Samsung", "month": "Feb", "employees_no": 35605 },
+                                   { "id": 39, "group_name": "Samsung", "month": "Mar", "employees_no": 15768 },
+                                   { "id": 40, "group_name": "Samsung", "month": "Apr", "employees_no": 15075 },
+                                   { "id": 41, "group_name": "Samsung", "month": "May", "employees_no": 12424 },
+                                   { "id": 42, "group_name": "Samsung", "month": "Jun", "employees_no": 12227 }
+                                ];
+                            }
+
+                            getFilteredData = function () {
+                                return [
+                                   { "id": 1, "group_name": "Google", "month": "Jan", "employees_no": 38367 },
+                                   { "id": 2, "group_name": "Google", "month": "Feb", "employees_no": 32684 },
+                                   { "id": 3, "group_name": "Google", "month": "Mar", "employees_no": 28236 },
+                                   { "id": 4, "group_name": "Google", "month": "Apr", "employees_no": 44205 },
+                                   { "id": 5, "group_name": "Google", "month": "May", "employees_no": 3357 },
+                                   { "id": 6, "group_name": "Google", "month": "Jun", "employees_no": 3511 },
+                                   { "id": 7, "group_name": "Google", "month": "Jul", "employees_no": 10372 },
+                                   { "id": 8, "group_name": "Google", "month": "Aug", "employees_no": 15565 },
+                                   { "id": 29, "group_name": "Microsoft", "month": "May", "employees_no": 6583 },
+                                   { "id": 30, "group_name": "Microsoft", "month": "Jun", "employees_no": 44485 },
+                                   { "id": 31, "group_name": "Microsoft", "month": "Jul", "employees_no": 3405 },
+                                   { "id": 32, "group_name": "Microsoft", "month": "Aug", "employees_no": 31709 },
+                                   { "id": 33, "group_name": "Microsoft", "month": "Sep", "employees_no": 45442 },
+                                   { "id": 34, "group_name": "Microsoft", "month": "Oct", "employees_no": 37580 },
+                                   { "id": 35, "group_name": "Microsoft", "month": "Nov", "employees_no": 23445 },
+                                   { "id": 36, "group_name": "Microsoft", "month": "Dec", "employees_no": 7554 },
+                                   { "id": 48, "group_name": "Samsung", "month": "Dec", "employees_no": 36183 }
+                                ];
+                            }
+                        </script>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    var searchtext = '';
+    $(document).ready(function () {
+        ShowDashboardDetails();
+        FillNewBookingRequests();
+        FillAllBookings();
+        FillAllVehicles();
+        BookingStatistics();
+    });
+
+    function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    function ShowDashboardDetails() {
+        $.ajax({
+            url: '/DashboardCarManager/GetDashboardDetails',
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                $("#NewRequest").append(result["NewRequest"]);
+                $("#AllBookings").append(result["AllBookings"]);
+                $("#AllVehicles").append(result["AllVehicle"]);
+            },
+            error: function (data) { }
+        });
+    }
+
+    function FillNewBookingRequests() {
+        $("#tblBooking").DataTable({
+            "processing": true, // for show progress bar
+            "destroy": true,    // for reinitialise
+            "serverSide": true, // for process server side
+            "filter": false,    // this is for disable filter (search box)
+            "orderMulti": false,// for disable multiple column at once
+            "searching": false, "info": false, "paging": false,
+            "ajax": {
+                "url": '/DashboardCarManager/NewBookingDetails',
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "BookingNo", "name": "BookingNo", "autoWidth": true },
+                { "data": "EmployeeName", "name": "EmployeeName", "autoWidth": true },
+                { "data": "BookDate", "name": "BookDate", "autoWidth": true },
+                { "data": "StartDate", "name": "StartDate", "autoWidth": true },
+                { "data": "SourceName", "name": "SourceName", "autoWidth": true },
+                { "data": "DestinationName", "name": "DestinationName", "autoWidth": true }
+            ]
+        });
+    }
+
+    function FillAllBookings() {
+        $("#tblAllBookings").DataTable({
+            "processing": true, // for show progress bar
+            "destroy": true,    // for reinitialise
+            "serverSide": true, // for process server side
+            "filter": false,    // this is for disable filter (search box)
+            "orderMulti": false,// for disable multiple column at once
+            "searching": false, "info": false, "paging": false,
+            "ajax": {
+                "url": '/DashboardCarManager/AllBookingRequests',
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "BookingNo", "name": "BookingNo", "autoWidth": true },
+                { "data": "EmployeeName", "name": "EmployeeName", "autoWidth": true },
+                { "data": "BookDate", "name": "BookDate", "autoWidth": true },
+                { "data": "StartDate", "name": "StartDate", "autoWidth": true },
+                { "data": "SourceName", "name": "SourceName", "autoWidth": true },
+                { "data": "DestinationName", "name": "DestinationName", "autoWidth": true }
+            ]
+        });
+    }
+
+    function FillAllVehicles() {
+        $("#tblAllVehicle").DataTable({
+            "processing": true, // for show progress bar
+            "destroy": true,    // for reinitialise
+            "serverSide": true, // for process server side
+            "filter": false,    // this is for disable filter (search box)
+            "orderMulti": false,// for disable multiple column at once
+            "searching": false, "info": false, "paging": false,
+            "ajax": {
+                "url": '/DashboardCarManager/AllVehicles',
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "MakeName", "name": "MakeName", "autoWidth": true },
+                { "data": "MakeModelName", "name": "MakeModelName", "autoWidth": true },
+                { "data": "VehicleNo", "name": "VehicleNo", "autoWidth": true },
+                { "data": "VehicleRegistrationName", "name": "VehicleRegistrationName", "autoWidth": true },
+                { "data": "InsuranceFrom", "name": "InsuranceFrom", "autoWidth": true }
+            ]
+        });
+    }
+
+    function BookingStatistics() {
+        $.ajax({
+            url: '/DashboardCarManager/BookingStatistics',
+            type: 'GET',
+            dataType: 'html',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != "[]") {
+                    var data = {};
+                    var leadtypes = [];
+
+                    jsondata = JSON.parse(result);
+                    $.each(jsondata, function (idx, obj) {
+                        leadtypes.push(obj.Status);
+                        data[obj.Status] = obj.Count;
+                    })
+
+                    var chart = c3.generate({
+                        bindto: '#donut-chart',
+                        data: {
+                            json: [data],
+                            keys: {
+                                value: leadtypes,
+                            },
+                            type: 'donut'
+                        },
+                        donut: {
+                            title: "Booking Statistics"
+                        },
+                        tooltip: {
+                            format: {
+                                title: function (d) { return 'Data '; },
+                                value: function (value, ratio, id) {
+                                    var format = id === 'data1' ? d3.format(',') : d3.format('');
+                                    return format(value);
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+    function MonthlyStatistics() {
+        $.ajax({
+            url: '/DashboardCarManager/BookingStatistics',
+            type: 'GET',
+            dataType: 'html',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != "[]") {
+                    var data = {};
+                    var leadtypes = [];
+
+                    jsondata = JSON.parse(result);
+                    $.each(jsondata, function (idx, obj) {
+                        leadtypes.push(obj.Status);
+                        data[obj.Status] = obj.Count;
+                    })
+
+                    var chart = c3.generate({
+                        bindto: '#donut-chart',
+                        data: {
+                            json: [data],
+                            keys: {
+                                value: leadtypes,
+                            },
+                            type: 'donut'
+                        },
+                        donut: {
+                            title: "Booking Statistics"
+                        },
+                        tooltip: {
+                            format: {
+                                title: function (d) { return 'Data '; },
+                                value: function (value, ratio, id) {
+                                    var format = id === 'data1' ? d3.format(',') : d3.format('');
+                                    return format(value);
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+</script>

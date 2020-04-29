@@ -1,0 +1,149 @@
+﻿@model IEnumerable<GTM.Models.NotificationModel>
+@{
+    ViewBag.Title = "Notification " + GTM.Resources.Resource.List;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Notification/Notification" title="Notification @GTM.Resources.Resource.List">Notification</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Notification/Notification" title="Notification List">Notification Lists</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control" />
+        </div>
+    </li>
+</ul>
+
+<div class="content-wrap">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="nest" id="DripClose">
+                <div class="title-alt">
+                    <h6>Notification @GTM.Resources.Resource.List</h6>
+                    <div class="titleClose">
+                        <a class="gone" href="~/Notification/Notification">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+
+                    <div class="titleToggle">
+                        <a class="nav-toggle-alt" href="#Drip">
+                            <span class="entypo-up-open"></span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="body-nest" id="Drip">
+                    <section data-valign="center" data-cols="1" data-name="preview">
+                        <div class="entypo-tooltip">
+                            <header class="box-typical-header">
+                                <div class="tbl-row">
+                                    <div class="tbl-cell tbl-cell-title">
+                                        <div class="btn-group btn-group-sm" style="float: none;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tbl-cell tbl-cell-sorces">
+                                    <ul class="statusul">
+                                        <li>(<p class="fa fa-envelope-o" style="">&nbsp;</p>) Read </li>
+                                        <li>(<p class="fa fa-envelope">&nbsp;</p>) Unread </li>
+                                    </ul>
+                                    <div class="clear"></div>
+                                </div>
+                            </header>
+
+                            <div id="divNotificationList">
+                                <table id="tblNotification" class="display table table-striped table-bordered " cellspacing="0" width="100%">
+                                    <colgroup>
+                                        <col style="width:40%;">
+                                        <col style="width:50%;">
+                                        <col style="width:05%;">
+                                        <col style="width:05%;">
+                                    </colgroup>
+
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Notification Subject</th>
+                                            <th>Notification Message</th>
+                                            <th>@GTM.Resources.Resource.Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    var searchtext = '';
+    $(function () {
+        FillNotification();
+    });
+
+    function FillNotification() {
+        $("#tblNotification").DataTable({
+            "processing": true, // for show progress bar
+            "destroy": true,    // for reinitialise
+            "serverSide": true, // for process server side
+            "filter": true,    // this is for disable filter (search box)
+            "orderMulti": false,// for disable multiple column at once
+            "ajax": {
+                "url": '/Notification/SearchNotification?searchText=' + searchtext,
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "NotificationSubject", "name": "NotificationSubject", "autoWidth": true },
+                { "data": "NotificationMessage", "name": "NotificationMessage", "autoWidth": true },
+                {
+                    "data": "StatusClass", "width": "50px", "render": function (data) {
+                        return "<p class='" + data + "'</p>";
+                    }
+                },
+                {
+                    "data": "NotificationId", "width": "50px", "render": function (data) {
+                        return '<a class="btn-primary btn-sm fa" title="Read" href="/Notification/AddNotification?NotificationId=' + data + '"><span class="glyphicon glyphicon-pencil" style="color:#ffffff;margin:0px !important"></span></a>';
+                    }
+                }]
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

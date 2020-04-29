@@ -1,0 +1,129 @@
+﻿@model GTM.Models.VehicleTypeModel
+@{
+    ViewBag.Title = "Add VehicleType";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/VehicleType" title="@GTM.Resources.Resource.VehicleType @GTM.Resources.Resource.List">@GTM.Resources.Resource.VehicleType</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddVehicleType" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.VehicleType">@GTM.Resources.Resource.Add @GTM.Resources.Resource.VehicleType</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddVehicleType", "Master", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddVehicleType" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add @GTM.Resources.Resource.VehicleType</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Master/VehicleType">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="form_center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.VehicleTypeId)
+                            @Html.HiddenFor(model => model.BranchId)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.VehicleTypeName, htmlAttributes: new { @class = "form-label" })
+                                @Html.EditorFor(model => model.VehicleTypeName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.VehicleTypeName, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                    @Html.CheckBoxFor(model => model.IsActive, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @id = "IsActive", @class = "", @value = "option1" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" value="Save" class="btn btn-primary">
+                                    @{var btntext = ""; if (Model.VehicleTypeId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                </button>
+                                <a href="~/Master/VehicleType" class="btn btn-danger">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                        }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    $("#VehicleTypeName").keyup(function () {
+        CheckVehicleTypeName($("#VehicleTypeName").val(), $("#VehicleTypeId").val(), $("#BranchId").val());
+    });
+
+    $("#VehicleTypeName").blur(function () {
+        if ($('#VehicleTypeName-error').html() == '') {
+            CheckVehicleTypeName($("#VehicleTypeName").val(), $("#VehicleTypeId").val(), $("#BranchId").val());
+        }
+    });
+
+    function CheckVehicleTypeName(VehicleTypeName, VehicleTypeId, BranchId) {
+        $.ajax({
+            url: '/Master/CheckVehicleTypeName?VehicleTypeName=' + VehicleTypeName + '&VehicleTypeId=' + VehicleTypeId + '&BranchId=' + BranchId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    $("#VehicleTypeName-error").html(result.message);
+                    toastr.warning(result.message,"GTM");
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

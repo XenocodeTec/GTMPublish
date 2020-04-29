@@ -1,0 +1,193 @@
+﻿@model IEnumerable<GTM.Models.TaxModel>
+@{
+    ViewBag.Title = GTM.Resources.Resource.tax + ' ' + GTM.Resources.Resource.List;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/Tax" title="@GTM.Resources.Resource.tax @GTM.Resources.Resource.List">@GTM.Resources.Resource.tax</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddTax" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.tax">@GTM.Resources.Resource.Add @GTM.Resources.Resource.tax</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control" />
+        </div>
+    </li>
+</ul>
+
+<div class="content-wrap">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="nest" id="DripClose">
+                <div class="title-alt">
+                    <h6>@GTM.Resources.Resource.tax @GTM.Resources.Resource.List</h6>
+                    <div class="titleClose">
+                        <a class="gone" href="~/Master/Tax">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+
+                    <div class="titleToggle">
+                        <a class="nav-toggle-alt" href="#Drip">
+                            <span class="entypo-up-open"></span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="body-nest" id="Drip">
+                    <section data-valign="center" data-cols="1" data-name="preview">
+                        <div class="entypo-tooltip">
+                            <header class="box-typical-header">
+                                <div class="tbl-row">
+                                    <div class="tbl-cell tbl-cell-title">
+                                        <div class="btn-group btn-group-sm" style="float: none;">
+                                            <a href="/Master/AddTax" class="btn btn-inline btn-primary btn-sm ladda-button"><span class="glyphicon glyphicon-plus" style="color:#ffffff"></span>&nbsp;@GTM.Resources.Resource.Add</a>
+                                            <a id="aDownloadTaxExcel" href="#" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-download" style="color:#ffffff"></span>&nbsp;@GTM.Resources.Resource.ExportToExcel</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="tbl-cell tbl-cell-sorces">
+                                        <ul class="statusul">
+                                            <li>(<p class="Active statusbox" style="">&nbsp;</p>) Active </li>
+                                            <li>(<p class="Inactive statusbox">&nbsp;</p>) Inactive </li>
+                                        </ul>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                            </header>
+
+                            <div id="divTaxList">
+                                <table id="tblTax" class="display table table-striped table-bordered " cellspacing="0" width="100%">
+                                    <colgroup>
+                                        <col style="width:55%;">
+                                        <col style="width:20%;">
+                                        <col style="width:05%;">
+                                        <col style="width:05%;">
+                                        <col style="width:05%;">
+                                    </colgroup>
+
+                                    <thead>
+                                        <tr role="row">
+                                            <th>@GTM.Resources.Resource.TaxTitle</th>
+                                            <th>@GTM.Resources.Resource.TaxRate</th>
+                                            <th>@GTM.Resources.Resource.Status</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    var searchtext = '';
+    $(function () {
+        FillTax();
+    });
+
+    function DeleteTax(TaxId) {
+        if (confirm("Are you sure,You want to delete Tax details?")) {
+            $.ajax({
+                url: '/Master/DeleteTax?TaxId=' + TaxId,
+                type: 'GET',
+                dataType: 'html',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function () {
+                    proccessingWindow();
+                },
+                success: function (result) {
+                    jsondata = JSON.parse(result);
+                    if (jsondata) {
+                        toastr.success("Tax deleted successfully.", "GTM");
+                        FillTax();
+                    }
+                    else {
+                        toastr.error("Some Problem occured while deleting Tax details.", "GTM");
+                        FillTax();
+                    }
+                },
+                complete: function (data) {
+                    closeingProccessingWindow();
+                },
+                error: function (data) {
+                    console.log(data);
+                    toastr.error("Please refresh page.", "GTM");
+                }
+            });
+        }
+    }
+
+    function FillTax() {
+        $("#aDownloadTaxExcel").attr('href', '\\Master\\DownloadTaxExcel?searchText=' + searchtext);
+
+        $("#tblTax").DataTable({
+            "processing": true, // for show progress bar
+            "destroy": true,    // for reinitialise
+            "serverSide": true, // for process server side
+            "filter": true,    // this is for disable filter (search box)
+            "orderMulti": false,// for disable multiple column at once
+            "ajax": {
+                "url": '/Master/SearchTax?searchText=' + searchtext,
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "TaxName", "name": "TaxName", "autoWidth": true },
+                { "data": "TaxPercent", "name": "TaxPercent", "autoWidth": true },
+                {
+                    "data": "StatusClass", "width": "50px", "render": function (data) {
+                        return "<p class='" + data + "'</p>";
+                    }
+                },
+                {
+                    "data": "TaxId", "width": "50px", "render": function (data) {
+                        return '<a class="btn-primary btn-sm fa" title="Edit" href="/Master/AddTax?TaxId=' + data + '"><span class="glyphicon glyphicon-pencil" style="color:#ffffff;margin:0px !important;"></span></a>';
+                    }
+                },
+                {
+                    "data": "TaxId", "width": "50px", "render": function (data) {
+                        return '<a id="btnDeleteTax" href="#" onclick="DeleteTax(' + data + ')" class="fa fa-delete btn-danger btn-sm fa" title="Delete"><span class="glyphicon glyphicon-trash" style="color:#ffffff;margin:0px !important;"></span></a>';
+                    }
+                }]
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

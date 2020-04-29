@@ -1,0 +1,126 @@
+﻿@model GTM.Models.PersonaliseThemesModel
+@{
+    ViewBag.Title = "Personalise and Themes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/PersonaliseThemes/AddPersonaliseThemes" title="Personslise Theme">Personslise Theme</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/PersonaliseThemes/AddPersonaliseThemes" title="@GTM.Resources.Resource.Add Personslise Theme">@GTM.Resources.Resource.Add Personslise Theme</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddPersonaliseThemes", "PersonaliseThemes", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddPersonaliseThemes" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add Personslise Theme</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Master/AddPersonaliseThemes">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="form_center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.PersonaliseandThemeId)
+
+                            <ul role="menu" class="them-div">
+                                <li class="theme-bg">
+                                    <div id="button-bg" class="button-bg" onclick="getClassName(this);"></div>
+                                    <div id="button-bg2" class="button-bg2" onclick="getClassName(this);"></div>
+                                    <div id="button-bg3" class="button-bg3" onclick="getClassName(this);"></div>
+                                    <div id="button-bg5" class="button-bg5" onclick="getClassName(this);"></div>
+                                    <div id="button-bg6" class="button-bg6" onclick="getClassName(this);"></div>
+                                    <div id="button-bg7" class="button-bg7" onclick="getClassName(this);"></div>
+                                    <div id="button-bg8" class="button-bg8" onclick="getClassName(this);"></div>
+                                    <div id="button-bg9" class="button-bg9" onclick="getClassName(this);"></div>
+                                    <div id="button-bg10" class="button-bg10" onclick="getClassName(this);"></div>
+                                    <div id="button-bg11" class="button-bg11" onclick="getClassName(this);"></div>
+                                    <div id="button-bg12" class="button-bg12" onclick="getClassName(this);"></div>
+                                    <div id="button-bg13" class="button-bg13" onclick="getClassName(this);"></div>
+                                </li>
+                            </ul>
+                            <div class="clear"></div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BackgroundImage, htmlAttributes: new { @class = "form-label" })
+                                @Html.EditorFor(model => model.BackgroundImage, new { htmlAttributes = new { @class = "form-control"} })
+                                @Html.ValidationMessageFor(model => model.BackgroundImage, "", new { @class = "error" })
+                                @Html.HiddenFor(model => model.BackgroundImage)
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" value="Save" class="btn btn-info">
+                                    @{var btntext = ""; if (Model.PersonaliseandThemeId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                </button>
+
+                                <button type="button" value="Clear" class="btn btn-danger" onclick="clearClassName();">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                        }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    function getClassName(obj) {
+        var classname = $(obj).attr('class');
+        $("#BackgroundImage").val(classname);
+        BackgroundImageScript.ChangeBackground(classname);
+    }
+
+    function clearClassName()
+    {
+        $("#BackgroundImage").val('');
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

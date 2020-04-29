@@ -1,0 +1,193 @@
+﻿@model IEnumerable<GTM.Models.BrandModel>
+@{
+    ViewBag.Title = GTM.Resources.Resource.Brand + ' ' + GTM.Resources.Resource.List;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/Brand" title="@GTM.Resources.Resource.Brand @GTM.Resources.Resource.List">@GTM.Resources.Resource.Brand</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddBrand" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.Brand">@GTM.Resources.Resource.Add @GTM.Resources.Resource.Brand</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control" />
+        </div>
+    </li>
+</ul>
+
+<div class="content-wrap">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="nest" id="DripClose">
+                <div class="title-alt">
+                    <h6>@GTM.Resources.Resource.Brand @GTM.Resources.Resource.List</h6>
+                    <div class="titleClose">
+                        <a class="gone" href="~/Master/Brand">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+
+                    <div class="titleToggle">
+                        <a class="nav-toggle-alt" href="#Drip">
+                            <span class="entypo-up-open"></span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="body-nest" id="Drip">
+                    <section data-valign="center" data-cols="1" data-name="preview">
+                        <div class="entypo-tooltip">
+                            <header class="box-typical-header">
+                                <div class="tbl-row">
+                                    <div class="tbl-cell tbl-cell-title">
+                                        <div class="btn-group btn-group-sm" style="float: none;">
+                                            <a href="/Master/AddBrand" class="btn btn-inline btn-primary btn-sm ladda-button"><span class="glyphicon glyphicon-plus" style="color:#ffffff"></span>&nbsp;@GTM.Resources.Resource.Add</a>
+                                            <a id="aDownloadBrandExcel" href="#" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-download" style="color:#ffffff"></span>&nbsp;@GTM.Resources.Resource.ExportToExcel</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tbl-cell tbl-cell-sorces">
+                                    <ul class="statusul">
+                                        <li>(<p class="Active statusbox" style="">&nbsp;</p>) Active </li>
+                                        <li>(<p class="Inactive statusbox">&nbsp;</p>) Inactive </li>
+                                    </ul>
+                                    <div class="clear"></div>
+                                </div>
+                            </header>
+
+                            <div id="divBrandList">
+                                <table id="tblBrand" class="display table table-striped table-bordered " cellspacing="0" width="100%">
+                                    <colgroup>
+                                        <col style="width:30%;">
+                                        <col style="width:55%;">
+                                        <col style="width:05%;">
+                                        <col style="width:05%;">
+                                        <col style="width:05%;">
+                                    </colgroup>
+
+                                    <thead>
+                                        <tr role="row">
+                                            <th>@GTM.Resources.Resource.Brand</th>
+                                            <th>@GTM.Resources.Resource.Description</th>
+                                            <th>@GTM.Resources.Resource.Status</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    var searchtext = '';
+    $(function () {
+        FillBrand();
+    });
+
+    function DeleteBrand(BrandId) {
+        if (confirm("Are you sure,You want to delete brand details?")) {
+            $.ajax({
+                url: '/Master/DeleteBrand?BrandId=' + BrandId,
+                type: 'GET',
+                dataType: 'html',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function () {
+                    proccessingWindow();
+                },
+                success: function (result) {
+                    jsondata = JSON.parse(result);
+                    if (jsondata) {
+                        toastr.success("Brand deleted successfully.", "GTM");
+                        FillBrand();
+                    }
+                    else {
+                        toastr.error("Some Problem occured while deleting Brand details.", "GTM");
+                        FillBrand();
+                    }
+                },
+                complete: function (data) {
+                    closeingProccessingWindow();
+                },
+                error: function (data) {
+                    console.log(data);
+                    toastr.error("Please refresh page.", "GTM");
+                }
+            });
+        }
+    }
+
+    function FillBrand() {
+        $("#aDownloadBrandExcel").attr('href', '\\Master\\DownloadBrandExcel?searchText=' + searchtext);
+
+        $("#tblBrand").DataTable({
+            "processing": true, // for show progress bar
+            "destroy": true,    // for reinitialise
+            "serverSide": true, // for process server side
+            "filter": true,    // this is for disable filter (search box)
+            "orderMulti": false,// for disable multiple column at once
+            "ajax": {
+                "url": '/Master/SearchBrand?searchText=' + searchtext,
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "BrandName", "name": "BrandName", "autoWidth": true },
+                { "data": "Description", "name": "Description", "autoWidth": true },
+                {
+                    "data": "StatusClass", "width": "50px", "render": function (data) {
+                        return "<p class='" + data + "'</p>";
+                    }
+                },
+                {
+                    "data": "BrandId", "width": "50px", "render": function (data) {
+                        return '<a class="btn-primary btn-sm fa" title="Edit" href="/Master/AddBrand?BrandId=' + data + '"><span class="glyphicon glyphicon-pencil" style="color:#ffffff;margin:0px !important"></span></a>';
+                    }
+                },
+                {
+                    "data": "BrandId", "width": "50px", "render": function (data) {
+                        return '<a id="btnDeleteBrand" href="#" onclick="DeleteBrand(' + data + ')" class="fa fa-delete btn-danger btn-sm fa" title="Delete"><span class="glyphicon glyphicon-trash" style="color:#ffffff;margin:0px !important"></span></a>';
+                    }
+                }]
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

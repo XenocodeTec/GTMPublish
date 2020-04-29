@@ -1,0 +1,269 @@
+﻿@model GTM.Models.ProcurementDetailModel
+
+@using (Ajax.BeginForm("AddProcurement", "Procurement", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "error" })
+    @Html.HiddenFor(model => model.SupplierId)
+
+    <div id="divProcurementList">
+        <table id="tblProcurementList" class="display table table-striped table-bordered " cellspacing="0" width="100%">
+            <colgroup>
+                <col style="width:20%;">
+                <col style="width:20%;">
+                <col style="width:15%;">
+                <col style="width:15%;">
+                <col style="width:15%;">
+                <col style="width:15%;">
+            </colgroup>
+
+            <thead>
+                <tr role="row">
+                    <th><input id='chkSelectAllBooklet' type="checkbox" />Select All</th>
+                    <th>Procurement Date</th>
+                    <th>Item Name</th>
+                    <th>@GTM.Resources.Resource.Quantity</th>
+                    <th>Item Price</th>
+                    <th>Tax Price</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (var i = 0; i < Model.ProcurementDetailLists.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.CheckBoxFor(item => item.ProcurementDetailLists[i].IsPaid, new { @class = "chkRowBooklet" })
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(item => item.ProcurementDetailLists[i].ProcurementDate)
+                            @Html.HiddenFor(item => item.ProcurementDetailLists[i].ProcurementDate)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(item => item.ProcurementDetailLists[i].ItemName)
+                            @Html.HiddenFor(item => item.ProcurementDetailLists[i].ItemId)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(item => item.ProcurementDetailLists[i].ItemPrice)
+                            @Html.HiddenFor(item => item.ProcurementDetailLists[i].ItemPrice)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(item => item.ProcurementDetailLists[i].Quantity)
+                            @Html.HiddenFor(item => item.ProcurementDetailLists[i].Quantity)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(item => item.ProcurementDetailLists[i].TaxPrice)
+                            @Html.HiddenFor(item => item.ProcurementDetailLists[i].TaxPrice)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(item => item.ProcurementDetailLists[i].TotalPrice)
+                            @Html.HiddenFor(item => item.ProcurementDetailLists[i].TotalPrice)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="clear"></div>
+
+        <div class="row">
+            <div class="col-md-9"></div>
+            <div class="col-md-3 m-t-10">
+                <div class="form-group">
+                    <label class="total-text">Total Amount</label>
+                    @Html.Editor("TotalPayment", new { htmlAttributes = new { @class = "form-control text-box single-line total-amt", @disabled = "disabled" } })
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+
+        <div id="divPaymentMode">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PaymentMode, htmlAttributes: new { @class = "form-label" })
+                        @Html.DropDownListFor(model => model.PaymentMode, new SelectList(new List<Object>{
+                                                                           new { value = 0 , text = "Select"  },
+                                                                           new { value = 1 , text = "Cash"  },
+                                                                           new { value = 2 , text = "Cheque"  },
+                                                                           new { value = 3 , text = "Online Payment"  },
+                                                                           new { value = 4 , text = "Card Payment"  }}, "value", "text", 1), new { @class = "form-control input-sm",@onchange= "ShowHideDiv();" })
+                                                                           @Html.ValidationMessageFor(model => model.PaymentMode, "", new { @class = "error" })
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+
+            <div class="row" id="trChequeDetails" style="display:none;">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ChequeNumber, htmlAttributes: new { @class = "form-label" })
+                        @Html.EditorFor(model => model.ChequeNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ChequeNumber, "", new { @class = "error" })
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ChequeDate, htmlAttributes: new { @class = "form-label" })
+                        <div id="ChequeDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                            @Html.EditorFor(model => model.ChequeDate, new { htmlAttributes = new { @class = "form-control" } })
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            @Html.HiddenFor(model => model.ChequeDate)
+                            @Html.ValidationMessageFor(model => model.ChequeDate, "", new { @class = "error" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.BankName, htmlAttributes: new { @class = "form-label" })
+                        @Html.EditorFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "error" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="trTransactionDetails" style="display:none;">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Transaction Number</label>
+                        @Html.Editor("TransactionNumber", new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Transaction Date</label>
+                    <div class="form-group">
+                        <div id="TransactionDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                            <input id="txtTransactionDate" class="form-control" type="text" />
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            <span id="FromDate-error" class="error"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 p-t-23 float-center">
+                <div class="form-group">
+                    <button id="btnSubmit" type="submit" value="Save" class="btn btn-primary">Save</button>
+                    <a href="~/Procurement/Procurement" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    var totalSumValue = 0;
+    function OnSuccess(data) {
+        toastr.success("Procurement details saved successfully", "GTM");
+        window.location.href = "/Procurement/Procurement";
+        return;
+    }
+
+    function OnFailure(data) {
+        toastr.warning("Error occured while adding records", "GTM");
+    }
+
+    function Begin() {
+        if ($('#studentname-error').html() == '') {
+            return true;
+        } else { return false; }
+    }
+
+    $(document).ready(function () {
+        $('.focus :input').focus();
+    });
+
+    $("#chkSelectAllBooklet").click(function () {
+        //Determine the reference CheckBox in Header row.
+        var chkAll = this;
+        //Fetch all row CheckBoxes in the Table.
+        var chkRows = $("#tblProcurementList").find(".chkRowBooklet");
+        //Execute loop over the CheckBoxes and check and uncheck based on
+        //checked status of Header row CheckBox.
+        chkRows.each(function () {
+            $(this)[0].checked = chkAll.checked;
+        });
+    });
+
+    $(".chkRowBooklet").click(function () {
+        //Determine the reference CheckBox in Header row.
+        var chkAll = $("#chkSelectAllBooklet");
+        //By default set to Checked.
+        chkAll.attr("checked", "checked");
+        //Fetch all row CheckBoxes in the Table.
+        var chkRows = $("#tblProcurementList").find(".chkRowBooklet");
+        //Execute loop over the CheckBoxes and if even one CheckBox
+        //is unchecked then Uncheck the Header CheckBox.
+        chkRows.each(function () {
+            if (!$(this).is(":checked")) {
+                chkAll.removeAttr("checked", "checked");
+                return;
+            }
+        });
+    });
+
+    $('#tblProcurementList').on('change', 'input[type="checkbox"]', function () {
+        var totalSumValue = 0;
+        var price = parseFloat($(this).parent().next().next().next().next().next().next().html().replace(",", "."));
+
+        if ($(this).is(':checked')) {
+            totalSumValue += price;
+        } else {
+            totalSumValue -= price;
+        }
+
+        $("#TotalPayment").val(totalSumValue.toFixed(2));
+    });
+
+    function ShowHideDiv() {
+        var paymentMode = $("#PaymentMode").val();
+        if (paymentMode == 1) {
+            $("#trChequeDetails").css("display", "none");
+            $("#trTransactionDetails").css("display", "none");
+        }
+        else if (paymentMode == 2) {
+            $("#trChequeDetails").css("display", "");
+            $("#trTransactionDetails").css("display", "none");
+        }
+        else if (paymentMode == 3) {
+            $("#trChequeDetails").css("display", "none");
+            $("#trTransactionDetails").css("display", "");
+        }
+    }
+
+    $("#ChequeDate").datepicker({
+        autoclose: true,
+        todayHighlight: true
+    }).datepicker('update', new Date());
+
+    $("#FromDate").datepicker({
+        todayBtn: 1,
+        autoclose: true,
+    }).on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('#ToDate').datepicker('setStartDate', minDate);
+    });
+
+    $('#tblProcurementList').on('change', 'input[type="checkbox"]', function () {
+        var price = parseFloat($(this).parent().next().next().next().next().next().next().html().replace(",", "."));
+
+        if ($(this).is(':checked')) {
+            totalSumValue += price;
+        } else {
+            totalSumValue -= price;
+        }
+
+        $("#TotalPayment").val(totalSumValue.toFixed(2));
+    });
+</script>

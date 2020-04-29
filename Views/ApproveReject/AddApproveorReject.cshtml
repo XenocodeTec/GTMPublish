@@ -1,0 +1,550 @@
+﻿@model GTM.Models.BookingDetailModel
+@{
+    ViewBag.Title = GTM.Resources.Resource.BookingDetails + ' ' + GTM.Resources.Resource.List;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#AddApproveorReject').submit(function () {
+                if ($(this).valid()) {
+                    $(this).find(':submit').attr('disabled', 'disabled');
+                }
+            });
+        });
+
+        $(function () {
+            $('.listbox').multiselect({
+                includeSelectAllOption: true
+            });
+        });
+    </script>
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/ApproveReject/ApproveReject" title="@GTM.Resources.Resource.BookingDetails @GTM.Resources.Resource.List">@GTM.Resources.Resource.BookingDetails</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="#" title="Approve or Reject Car Booking">Approve or Reject Car Booking</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control" />
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddApproveorReject", "ApproveReject", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddApproveorReject" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "error" })
+    @Html.HiddenFor(model => model.BookingDetailId)
+
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="DripClose">
+                    <div class="title-alt">
+                        <h6>Approve or Reject Car Booking @GTM.Resources.Resource.List</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Booking/Booking">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="Drip">
+                        @Html.HiddenFor(model => model.EmployeeId)
+                        @Html.HiddenFor(model => model.BookingId)
+
+                        <div id="bookingdetails">
+                            <div class="row">
+                                <div class="div-employee">
+                                    <div class="title-head">
+                                        <h6>Employee Details</h6>
+                                    </div>
+                                    <div class="div-forms">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td><label title="Employee No">Employee No </label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td><label id="lblEmployeeNo" class="td-details"></label></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td><label title="Employee Name">Employee Name</label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td><label class="td-details" id="lblEmployeeName"></label></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td><label title="Department Name">Department Name </label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td><label id="lblDepartmentName" class="td-details"></label></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td><label title="Branch Name">Branch Name</label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td><label id="lblBranchName" class="td-details"></label></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td> <label title="Mobile No">Mobile No</label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td><label id="lblMobileNo" class="td-details"></label></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td><label title="Email Id">Email Id</label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td><label id="lblEmailId" class="td-details"></label></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="div-booking">
+                                    <div class="title-head">
+                                        <h6>Booking Details</h6>
+                                    </div>
+
+                                    <div class="div-forms">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td><label title="Booking No">Booking No</label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td><label id="lblBookingNo" class="td-details"></label></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td><label title="Booking Date">Booking Date</label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td> <label id="lblBookingDate" class="td-details"></label></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td> <label title="Journey Date">Journey Date</label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td> <label id="lblJourneyDate" class="td-details"></label></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>   <label title="Source Name">Source Name</label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td> <label id="lblSourceName" class="td-details"></label></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td> <label title="Journey End Date">Journey End Date</label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td> <label id="lblJourneyEndDate" class="td-details"></label></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td><label title="Email Id">Purpose </label></td>
+                                                    <td>&nbsp; : &nbsp;</td>
+                                                    <td> <label id="lblPurpose" class="td-details"></label></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="clear:both;"></div>
+
+                        <div class="col-sm-3">
+                            <div id="approvereject">
+                                <label class="radio-inline">@Html.RadioButtonFor(model => model.IsApproved, true, new { id = "approved",@checked=true }) Approve</label>
+                                <label class="radio-inline">@Html.RadioButtonFor(model => model.IsApproved, false, new { id = "reject" }) Reject </label>
+                            </div>
+                        </div>
+                        <div style="clear:both;"></div>
+
+                        <div id="divReject" style="display:none;">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.RejectRemark, htmlAttributes: new { @class = "form-label" })
+                                @Html.TextAreaFor(model => model.RejectRemark, new { @class = "text-height" })
+                                @Html.ValidationMessageFor(model => model.RejectRemark, "", new { @class = "error" })
+                            </div>
+                        </div>
+
+                        <div id="divAccept" style="">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="title-head v1">
+                                        <h6>Vehicle Details</h6>
+                                    </div>
+                                    <div class="div-titles v2">
+                                        <div class="form-group">
+                                            <label title="Vehicle Number">Vehicle Number :</label>
+                                            @Html.DropDownListFor(model => model.VehicleId, new SelectList(ViewBag.VehicleList, "VehicleId", "VehicleNo"), "Select", new { @class = "form-control", onchange = "javascript:GetVehicleDetails();" })
+                                            @Html.ValidationMessageFor(model => model.VehicleId, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Make">Make Name :</label>
+                                            <input id="txtMake" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Make Model Name">Make Model Name :</label>
+                                            <input id="txtMakeModelName" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Vehicle Average">Vehicle Average :</label>
+                                            <input id="txtVehicleAverage" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Vehicle Number">Odometer Reading :</label>
+                                            @Html.EditorFor(model => model.StartReading, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.StartReading, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="title-head d1">
+                                        <h6>Driver Details</h6>
+                                    </div>
+                                    <div class="div-titles d2">
+                                        <div class="form-group">
+                                            <label title="Driver Name">Is Self Driver :</label>
+                                            @Html.CheckBoxFor(model => model.IsSelfDriver, new { id = "chkIsSelfDriver", onchange = "javascript:EnableDisabledDriverList();" })
+                                            @Html.ValidationMessageFor(model => model.IsSelfDriver, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Driver Name">Driver Name :</label>
+                                            @Html.DropDownListFor(model => model.DriverId, new SelectList(ViewBag.EmployeeList, "EmployeeId", "FirstName"), "Select", new { @class = "form-control", onchange = "javascript:GetDriverDetails();" })
+                                            @Html.ValidationMessageFor(model => model.DriverId, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Mobile No">Mobile Number :</label>
+                                            <input id="txtMobileNo" disabled="disabled" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Emergency No">Emergency Number :</label>
+                                            <input id="txtEmergencyNo" disabled="disabled" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="title-head b1">
+                                        <h6>Booklet Details</h6>
+                                    </div>
+                                    <div class="div-titles b2">
+                                        <div class="form-group">
+                                            <label title="Booklet No">Booklet No :</label>
+                                            @Html.ListBox("BookletNo", new SelectList(ViewBag.BookletList, "BookletId", "BookletNo"), new { @class = "listbox form-control input-sm width-min-25", onchange = "javascript:FillBookletDetails();" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label title="Booklet Leaf No">Booklet Leaf No :</label>
+                                            @Html.ListBox("BookletLeafNoId", new SelectList(ViewBag.BookletDetailList, "Id", "BookletLeafNo"), new { @class = "listbox form-control input-sm width-min-25",onchange= "javascript:GetSelectedBooklet();" })
+                                            @Html.HiddenFor(model => model.BookletLeafNo)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="title-head i1">
+                                        <h6>Item Check List Details</h6>
+                                    </div>
+                                    <div class="div-titles i2">
+                                        <div class="scroll-div">
+                                            <table id="tblCheckListDetails" class="table table-hover" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:70%">Check List Item</th>
+                                                        <th style="width:30%"><input id='chkSelectAllCheckList' type="checkbox" />Proper</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    @for (var i = 0; i < Model.BookingCheckLists.Count; i++)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @Html.DisplayFor(item => item.BookingCheckLists[i].ItemName)
+                                                                @Html.HiddenFor(item => item.BookingCheckLists[i].ItemName)
+                                                                @Html.HiddenFor(item => item.BookingCheckLists[i].CheckListItemId)
+                                                            </td>
+                                                            <td>
+                                                                @Html.CheckBoxFor(item => item.BookingCheckLists[i].IsProper, new { @class = "chkRowchecklist" })
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="clear:both;"></div>
+
+                        <div class="col-sm-12 p-t-23 float-center">
+                            <div class="form-group">
+                                <button type="submit" value="Save" class="btn btn-primary">
+                                    @{var btntext = ""; if (Model.BookingDetailId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                </button>
+                                <a href="~/ApproveReject/ApproveReject" class="btn btn-danger">Cancel</a>
+                            </div>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                        }
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    function GetBookingDetails(BookingId) {
+        $.ajax({
+            url: '/ApproveReject/GetBookingDetails?BookingId=' + BookingId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != '') {
+                    $("#lblBookingNo").html(result.BookingNo);
+                    $("#lblBookingDate").html(result.BookDate);
+                    $("#lblJourneyDate").html(result.StartDate);
+                    $("#lblSourceName").html(result.SourceName);
+                    $("#lblJourneyEndDate").html(result.EndDate);
+                    $("#lblPurpose").html(result.Purpose);
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    function GetEmployeeDetails(EmployeeId) {
+        $.ajax({
+            url: '/ApproveReject/GetEmployeeDetails?EmployeeId=' + EmployeeId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != '') {
+                    $("#lblEmployeeNo").html(result.EmployeeCode);
+                    $("#lblEmployeeName").html(result.FirstName);
+                    $("#lblDepartmentName").html(result.DepartmentName);
+                    $("#lblBranchName").html(result.BranchName);
+                    $("#lblMobileNo").html(result.MobileNo);
+                    $("#lblEmailId").html(result.EmailId);
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    function GetDriverDetails() {
+        var employeeId = $("#EmployeeId").val();
+        $.ajax({
+            url: '/ApproveReject/GetDriverDetails?EmployeeId=' + employeeId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != '') {
+                    $("#txtMobileNo").val(result.MobileNo);
+                    $("#txtEmergencyNo").val(result.EmergencyNo);
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    function GetVehicleDetails() {
+        var vehicleId = $("#VehicleId").val();
+        $.ajax({
+            url: '/ApproveReject/GetVehicleDetails?VehicleId=' + vehicleId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != '') {
+                    $("#txtMake").val(result.MakeName);
+                    $("#txtMakeModelName").val(result.MakeModelName);
+                    $("#txtVehicleAverage").val(result.VehicleAverage);
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $("input[type='radio']").click(function () {
+        var ApprovedValue = $("input[name='IsApproved']:checked").val();
+        if (ApprovedValue == "True") {
+            $("#divAccept").css("display", "");
+            $("#divReject").css("display", "none");
+        }
+        else {
+            $("#divReject").css("display", "");
+            $("#divAccept").css("display", "none");
+        }
+    });
+
+    function EnableDisabledDriverList() {
+        if ($("#chkIsSelfDriver").prop("checked")) {
+            $("#DriverId").attr("disabled", true);
+        }
+        else {
+            $("#DriverId").removeAttr("disabled");
+        }
+    }
+
+    $("#chkSelectAllBooklet").click(function () {
+        //Determine the reference CheckBox in Header row.
+        var chkAll = this;
+        //Fetch all row CheckBoxes in the Table.
+        var chkRows = $("#tblBookletDetails").find(".chkRowBooklet");
+        //Execute loop over the CheckBoxes and check and uncheck based on
+        //checked status of Header row CheckBox.
+        chkRows.each(function () {
+            $(this)[0].checked = chkAll.checked;
+        });
+    });
+
+    $(".chkRowBooklet").click(function () {
+        //Determine the reference CheckBox in Header row.
+        var chkAll = $("#chkSelectAllBooklet");
+        //By default set to Checked.
+        chkAll.attr("checked", "checked");
+        //Fetch all row CheckBoxes in the Table.
+        var chkRows = $("#tblBookletDetails").find(".chkRowBooklet");
+        //Execute loop over the CheckBoxes and if even one CheckBox
+        //is unchecked then Uncheck the Header CheckBox.
+        chkRows.each(function () {
+            if (!$(this).is(":checked")) {
+                chkAll.removeAttr("checked", "checked");
+                return;
+            }
+        });
+    });
+
+    $("#chkSelectAllCheckList").click(function () {
+        //Determine the reference CheckBox in Header row.
+        var chkAll = this;
+        //Fetch all row CheckBoxes in the Table.
+        var chkRows = $("#tblCheckListDetails").find(".chkRowchecklist");
+        //Execute loop over the CheckBoxes and check and uncheck based on
+        //checked status of Header row CheckBox.
+        chkRows.each(function () {
+            $(this)[0].checked = chkAll.checked;
+        });
+    });
+
+    $(".chkRowchecklist").click(function () {
+        //Determine the reference CheckBox in Header row.
+        var chkAll = $("#chkSelectAllCheckList");
+        //By default set to Checked.
+        chkAll.attr("checked", "checked");
+        //Fetch all row CheckBoxes in the Table.
+        var chkRows = $("#tblCheckListDetails").find(".chkRowchecklist");
+        //Execute loop over the CheckBoxes and if even one CheckBox
+        //is unchecked then Uncheck the Header CheckBox.
+        chkRows.each(function () {
+            if (!$(this).is(":checked")) {
+                chkAll.removeAttr("checked", "checked");
+                return;
+            }
+        });
+    });
+
+    function FillBookletDetails()
+    {
+        var bookletId = $("#BookletNo").val();
+        $.ajax({
+            url: '/ApproveReject/FillBookletDetails?BookletId=' + bookletId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                var jsonObj = result;
+                debugger;
+
+                $('#BookletLeafNoId').multiselect('destroy');
+                $('#BookletLeafNoId').empty();
+                $('#BookletLeafNoId').append($('<option>', { value: 0, text: "Select" }));
+                $.each(result, function (i, item) {
+                    $("#BookletLeafNoId").append('<option value="' + item.BookletDetailId + '">' + item.BookletLeafNo + '</option>');
+                });
+
+                $('#BookletLeafNoId').multiselect({
+                    selectAllValue: 'multiselect-all',
+                    enableCaseInsensitiveFiltering: true,
+                    enableFiltering: true,
+                    maxHeight: '300',
+                    buttonWidth: '120',
+                    numberDisplayed: 2,
+                    nonSelectedText: 'Select Booklet Leaf No',
+                });
+            },
+            error: function (data) { }
+        });
+    }
+
+    function GetSelectedBooklet() {
+        debugger;
+        var selectedCountries = "";
+        $("#BookletLeafNoId option:selected").each(function () {
+            selectedCountries += $(this).text() + ",";
+        });
+        if (selectedCountries) {
+            $("#BookletLeafNo").val(selectedCountries);
+        }
+    }
+
+    $(document).ready(function () {
+        GetBookingDetails($("#BookingId").val());
+        GetEmployeeDetails($("#EmployeeId").val());
+
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

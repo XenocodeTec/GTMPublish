@@ -1,0 +1,145 @@
+﻿@model GTM.Models.EmailSettingModel
+@{
+    ViewBag.Title = "Add EmailSetting";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/EmailSetting" title="@GTM.Resources.Resource.Email @GTM.Resources.Resource.List">@GTM.Resources.Resource.Email</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddEmailSetting" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.Email">@GTM.Resources.Resource.Add @GTM.Resources.Resource.Email</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddEmailSetting", "Master", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddEmailSetting" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add @GTM.Resources.Resource.Email</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Master/EmailSetting">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="form_center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.EmailSettingId)
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SMTPServer, htmlAttributes: new { @class = "form-label" })
+                                @Html.EditorFor(model => model.SMTPServer, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.SMTPServer, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "form-label" })
+                                @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "form-label" })
+                                @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.CheckBoxFor(model => model.IsSSL, new { id = "chkIsSSL", onchange = "javascript:showPortNo();" }) Enable SSL
+                                @Html.ValidationMessageFor(model => model.IsSSL, "", new { @class = "error" })
+                                <span id="enable-error" class="error"></span>
+                            </div>
+
+                            <div id="portno" style="display:none;">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.PortNo, htmlAttributes: new { @class = "form-label" })
+                                    @Html.EditorFor(model => model.PortNo, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PortNo, "", new { @class = "error" })
+                                    <span id="port-error" class="error"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" value="Save" class="btn btn-primary">
+                                    @{var btntext = ""; if (Model.EmailSettingId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                </button>
+                                <a href="/Master/EmailSetting" class="btn btn-danger">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    function showPortNo() {
+        if ($("#chkIsSSL").prop("checked")) {
+            $("#portno").css("display", "");
+        }
+        else {
+            $("#portno").css("display", "none");
+        }
+    }
+
+    $('#chkEnableSSL').change(function () {
+        var isChecked = $(this).is(':checked');
+        if (isChecked == true)
+            $("#portno").show(500);
+        else
+            $("#portno").hide(500);
+    });
+
+    $(document).ready(function () {
+        $('.focus :input').focus();
+        showPortNo();
+    });
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

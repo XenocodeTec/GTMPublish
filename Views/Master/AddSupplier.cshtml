@@ -1,0 +1,325 @@
+﻿@model GTM.Models.SupplierModel
+@{
+    ViewBag.Title = "Add Supplier";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <script src="~/Scripts/CommonScript.js"></script>
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/Supplier" title="@GTM.Resources.Resource.Supplier @GTM.Resources.Resource.List">@GTM.Resources.Resource.Supplier</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddSupplier" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.Supplier">@GTM.Resources.Resource.Add @GTM.Resources.Resource.Supplier</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddSupplier", "Master", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddSupplier" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add @GTM.Resources.Resource.Supplier</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Master/Branch">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="formone-center">
+                            <div class="row">
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true, "", new { @class = "error" })
+                                @Html.HiddenFor(model => model.SupplierId)
+                                @Html.HiddenFor(model => model.BranchId)
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SupplierName, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.SupplierName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SupplierCode, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.SupplierCode, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.SupplierCode, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ContactPersonName, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.ContactPersonName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ContactPersonName, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "form-label" })
+                                        @Html.TextAreaFor(model => model.Address, new { @class = "text-height" })
+                                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.CountryId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.CountryList, "CountryId", "CountryName"), GTM.Resources.Resource.Select, new { @class = "form-control", onchange = "javascript:FillState();" })
+                                        @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.StateId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.StateId, new SelectList(ViewBag.StateList, "StateId", "StateName"), GTM.Resources.Resource.Select, new { @class = "form-control", onchange = "javascript:FillCity();" })
+                                        @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.CityId, new SelectList(ViewBag.CityList, "CityId", "CityName"), GTM.Resources.Resource.Select, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Zipcode, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.Zipcode, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Zipcode, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.PhoneNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.PhoneNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PhoneNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MobileNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.AlternateNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.AlternateNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.AlternateNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.EmailId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.EmailId, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="SupplierPhoto">Supplier Photo :</label>
+                                        <input id="SupplierPhoto" name="files" type="file" accept='image/*' />
+                                        <p class="mandatoryFields">Upload file must be less than or equals to 5 mb</p>
+                                        <span id="SupplierPhoto-error" class="text-danger"></span>
+
+                                        @if (Model.SupplierPhoto != null)
+                                        {
+                                            <span>Click <a href="/Master/DownloadFile?filePath=@Model.SupplierPhoto">here</a> to download proposal file</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="IdentityProof">Identity Proof :</label>
+                                        <input id="IdentityProof" name="files" type="file" accept='application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document' />
+                                        <p class="mandatoryFields">Upload file must be less than or equals to 5 mb</p>
+                                        <span id="IdentityProof-error" class="text-danger"></span>
+
+                                        @if (Model.IdentityProof != null)
+                                        {
+                                            <span>Click <a href="/Master/DownloadFile?filePath=@Model.IdentityProof">here</a> to download proposal file</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "form-label" })
+                                        @Html.TextAreaFor(model => model.Remark, new { @class = "text-height" })
+                                        @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            @Html.CheckBoxFor(model => model.IsActive)
+                                            @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "error" })
+                                        </div>
+                                        @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group m-t-2">
+                                        <button type="submit" value="Save" class="btn btn-primary">
+                                            @{var btntext = ""; if (Model.SupplierId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                        </button>
+                                        <a href="~/Master/Supplier" class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                            }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    $('#SupplierPhoto').on("change", function () {
+        $('#dvProgress').empty();
+        var sizeInKb = parseFloat($(this).prop("files")['0'].size / 1024).toFixed(2);
+        var fileName = $(this).prop("files")['0'].name;
+        uploadProgress = $('#dvProgress').progressbarManager({
+            totalValue: sizeInKb,
+            initValue: '0kb',
+            animate: true,
+            stripe: true,
+            style: 'primary'
+        });
+        var chunk = 0;
+        var uploading = setInterval(function () {
+            uploadProgress.setValue(chunk);
+            if (uploadProgress.isComplete()) {
+                clearInterval(uploading);
+                uploadProgress.style('success');
+            }
+            chunk += 500;
+        }, 500);
+    });
+
+    $('#IdentityProof').on("change", function () {
+        $('#dvProgress').empty();
+        var sizeInKb = parseFloat($(this).prop("files")['0'].size / 1024).toFixed(2);
+        var fileName = $(this).prop("files")['0'].name;
+        uploadProgress = $('#dvProgress').progressbarManager({
+            totalValue: sizeInKb,
+            initValue: '0kb',
+            animate: true,
+            stripe: true,
+            style: 'primary'
+        });
+        var chunk = 0;
+        var uploading = setInterval(function () {
+            uploadProgress.setValue(chunk);
+            if (uploadProgress.isComplete()) {
+                clearInterval(uploading);
+                uploadProgress.style('success');
+            }
+            chunk += 500;
+        }, 500);
+    });
+
+    function FillState() {
+        var selectedval = $("#CountryId").val();
+        CommonScript.FillState(selectedval);
+    }
+
+    function FillCity() {
+        var selectedval = $("#StateId").val();
+        CommonScript.FillCity(selectedval);
+    }
+
+    $("#SupplierName").keyup(function () {
+        CheckSupplierName($("#SupplierName").val(), $("#SupplierId").val(), $("#BranchId").val());
+    });
+
+    $("#SupplierName").blur(function () {
+        if ($('#SupplierName-error').html() == '') {
+            CheckSupplierName($("#SupplierName").val(), $("#SupplierId").val(), $("#BranchId").val());
+        }
+    });
+
+    function CheckSupplierName(SupplierName, SupplierId, BranchId) {
+        $.ajax({
+            url: '/Master/CheckSupplierName?SupplierName=' + SupplierName + '&SupplierId=' + SupplierId + '&BranchId=' + BranchId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    toastr.error(result.message, "GTM");
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

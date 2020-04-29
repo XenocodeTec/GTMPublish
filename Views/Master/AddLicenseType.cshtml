@@ -1,0 +1,135 @@
+﻿@model GTM.Models.LicenseTypeModel
+@{
+    ViewBag.Title = "Add License Type";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/LicenseType" title="License Type @GTM.Resources.Resource.List">License Type</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddLicenseType" title="@GTM.Resources.Resource.Add License Type">@GTM.Resources.Resource.Add License Type</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddLicenseType", "Master", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddLicenseType" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add License Type</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Master/LicenseType">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="form_center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.LicenseTypeId)
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.LicenseTypeName, htmlAttributes: new { @class = "form-label" })
+                                @Html.EditorFor(model => model.LicenseTypeName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.LicenseTypeName, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "form-label" })
+                                @Html.TextAreaFor(model => model.Remark, new { @class = "text-height" })
+                                @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "error" })
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "error" })
+                                </div>
+                                @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "" })
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" value="Save" class="btn btn-primary">
+                                    @{var btntext = ""; if (Model.LicenseTypeId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                </button>
+                                <a href="~/Master/LicenseType" class="btn btn-danger">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                        }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    $("#LicenseTypeName").keyup(function () {
+        CheckLicenseTypeName($("#LicenseTypeName").val(), $("#LicenseTypeId").val(), $("#BranchId").val());
+    });
+
+    $("#LicenseTypeName").blur(function () {
+        if ($('#LicenseTypeName-error').html() == '') {
+            CheckLicenseTypeName($("#LicenseTypeName").val(), $("#LicenseTypeId").val(), $("#BranchId").val());
+        }
+    });
+
+    function CheckLicenseTypeName(LicenseTypeName, LicenseTypeId, BranchId) {
+        $.ajax({
+            url: '/Master/CheckLicenseTypeName?LicenseTypeName=' + LicenseTypeName + '&LicenseTypeId=' + LicenseTypeId + '&BranchId=' + BranchId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    toastr.error(result.message, "GTM");
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

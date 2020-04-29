@@ -1,0 +1,137 @@
+﻿@model IEnumerable<GTM.Models.PaymentModel>
+@{
+    ViewBag.Title ="Payment " + GTM.Resources.Resource.List;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Payment/Payment" title="Payment @GTM.Resources.Resource.List">Payment</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Payment/Payment" title="Payment">Payment List</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control" />
+        </div>
+    </li>
+</ul>
+
+<div class="content-wrap">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="nest" id="DripClose">
+                <div class="title-alt">
+                    <h6>Payment @GTM.Resources.Resource.List</h6>
+                    <div class="titleClose">
+                        <a class="gone" href="~/Payment/Payment">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+
+                    <div class="titleToggle">
+                        <a class="nav-toggle-alt" href="#Drip">
+                            <span class="entypo-up-open"></span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="body-nest" id="Drip">
+                    <section data-valign="center" data-cols="1" data-name="preview">
+                        <div class="entypo-tooltip">
+                            <div id="divPaymentList">
+                                <table id="tblPayment" class="display table table-striped table-bordered " cellspacing="0" width="100%">
+                                    <colgroup>
+                                        <col style="width:25%;">
+                                        <col style="width:15%;">
+                                        <col style="width:15%;">
+                                        <col style="width:15%;">
+                                        <col style="width:10%;">
+                                        <col style="width:10%;">
+                                        <col style="width:05%;">
+                                    </colgroup>
+
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Payment Date</th>
+                                            <th>Supplier Name</th>
+                                            <th>Mobile No</th>
+                                            <th>Email Id</th>
+                                            <th>Payment Mode</th>
+                                            <th>Total Amount</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    var searchtext = '';
+    $(function () {
+        FillPayment();
+    });
+
+    function FillPayment() {
+        $("#tblPayment").DataTable({
+            "processing": true, // for show progress bar
+            "destroy": true,    // for reinitialise
+            "serverSide": true, // for process server side
+            "filter": true,    // this is for disable filter (search box)
+            "orderMulti": false,// for disable multiple column at once
+            "ajax": {
+                "url": '/Payment/SearchPayment?searchText=' + searchtext,
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "SupplierName", "name": "SupplierName", "autoWidth": true },
+                { "data": "MobileNo", "name": "MobileNo", "autoWidth": true },
+                { "data": "EmailId", "name": "EmailId", "autoWidth": true },
+                { "data": "PurchaseDate", "name": "PurchaseDate", "autoWidth": true },
+                { "data": "PayMode", "name": "PayMode", "autoWidth": true },
+                { "data": "TotalAmount", "name": "TotalAmount", "autoWidth": true },
+                {
+                    "data": "PurchaseOrderId", "width": "50px", "render": function (data) {
+                        return '<a class="btn-primary btn-sm fa" id="btnPrintPayment" href="/Payment/PrintPayment?PaymentOrderId=' + data + '" title="Print"><span class="glyphicon glyphicon-print" style="color:#ffffff;margin:0px !important"></span></a>';
+                    }
+                }]
+        });
+    }
+
+    $(document).ready(function () {
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

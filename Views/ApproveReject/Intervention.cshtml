@@ -1,0 +1,260 @@
+﻿@model IEnumerable<GTM.Models.InterventionModel>
+@{
+    ViewBag.Title = "Intervention " + GTM.Resources.Resource.List;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/ApproveReject/Intervention" title="Intervention @GTM.Resources.Resource.List">Intervention @GTM.Resources.Resource.List</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="#" title="Intervention">Add Intervention</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control" />
+        </div>
+    </li>
+</ul>
+
+<div class="content-wrap">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="nest" id="DripClose">
+                <div class="title-alt">
+                    <h6>Intervention @GTM.Resources.Resource.List</h6>
+                    <div class="titleClose">
+                        <a class="gone" href="~/ApproveReject/Intervention">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+
+                    <div class="titleToggle">
+                        <a class="nav-toggle-alt" href="#Drip">
+                            <span class="entypo-up-open"></span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="body-nest" id="Drip">
+                    <section data-valign="center" data-cols="1" data-name="preview">
+                        <div class="entypo-tooltip">
+                            <header class="box-typical-header">
+                                <div class="tbl-row">
+                                    <div class="tbl-cell tbl-cell-title">
+                                        <div class="" style="float: none;">
+                                            <a href="/ApproveReject/AddIntervention" class="btn btn-inline btn-primary btn-sm ladda-button"><span class="glyphicon glyphicon-plus" style="color:#ffffff"></span>&nbsp;@GTM.Resources.Resource.Add</a>
+                                            <a id="aDownloadInterventionExcel" href="#" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-download" style="color:#ffffff"></span>&nbsp;@GTM.Resources.Resource.ExportToExcel</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="tbl-cell tbl-cell-sorces">
+                                        <ul class="statusul">
+                                            <li>(<p class="Inprocess statusbox" style="">&nbsp;</p>) In Process </li>
+                                            <li>(<p class="Active statusbox" style="">&nbsp;</p>) Approved </li>
+                                            <li>(<p class="Inactive statusbox">&nbsp;</p>) Rejected </li>
+                                        </ul>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                            </header>
+
+                            <div id="divInterventionList">
+                                <div class="clear"></div>
+                                <table id="tblIntervention" class="display table table-striped table-bordered " cellspacing="0" width="100%">
+                                    <colgroup>
+                                        <col style="width:15%;">
+                                        <col style="width:25%;">
+                                        <col style="width:25%;">
+                                        <col style="width:05%;">
+                                        <col style="width:05%;">
+                                        <col style="width:05%;">
+                                        <col style="width:05%;">
+                                    </colgroup>
+
+                                    <thead>
+                                        <tr role="row">
+                                            <th>@GTM.Resources.Resource.RequestDate</th>
+                                            <th>@GTM.Resources.Resource.VehicleNo</th>
+                                            <th>Service Type</th>
+                                            <th>@GTM.Resources.Resource.Status</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    var searchtext = '';
+    $(function () {
+        FillIntervention();
+    });
+
+    function DeleteIntervention(InterventionId) {
+        if (confirm("Are you sure,You want to delete intervention details?")) {
+            $.ajax({
+                url: '/ApproveReject/DeleteIntervention?InterventionId=' + InterventionId,
+                type: 'GET',
+                dataType: 'html',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function () {
+                    proccessingWindow();
+                },
+                success: function (result) {
+                    jsondata = JSON.parse(result);
+                    if (jsondata.status == "success") {
+                        toastr.success("Vehicle intervention deleted successfully.", "GTM");
+                        FillIntervention();
+                    }
+                    else {
+                        toastr.error("Some Problem occured while deleting vehicle intervention.", "GTM");
+                        FillIntervention();
+                    }
+                },
+                complete: function (data) {
+                    closeingProccessingWindow();
+                },
+                error: function (data) {
+                    console.log(data);
+                    toastr.error("Please refresh page.", "GTM");
+                }
+            });
+        }
+    }
+
+    function FillIntervention() {
+        $("#tblIntervention").DataTable({
+            "processing": true, // for show progress bar
+            "destroy": true,    // for reinitialise
+            "serverSide": true, // for process server side
+            "filter": false,    // this is for disable filter (search box)
+            "orderMulti": false,// for disable multiple column at once
+            "ajax": {
+                "url": '/ApproveReject/SearchIntervention?searchText=' + searchtext,
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "lRequestDate", "name": "lRequestDate", "autoWidth": true },
+                { "data": "VehicleNo", "name": "VehicleNo", "autoWidth": true },
+                { "data": "ServiceType", "name": "ServiceType", "autoWidth": true },
+                {
+                    "data": "StatusClass", "width": "50px", "render": function (data) {
+                        return "<p class='" + data + "'</p>";
+                    }
+                },
+                {
+                    "data": "InterventionId", "width": "50px", "render": function (data) {
+                        return '<a class="btn-primary btn-sm fa" title="Edit" href="/ApproveReject/AddIntervention?InterventionId=' + data + '"><span class="glyphicon glyphicon-pencil" style="color:#ffffff;margin:0px !important;"></span></a>';
+                    }
+                },
+                {
+                    "data": "InterventionId", "width": "50px", "render": function (data) {
+                        return '<a id="btnDeleteIntervention" href="#" onclick="DeleteIntervention(' + data + ')" class="fa fa-delete btn-danger btn-sm fa" title="Delete"><span class="glyphicon glyphicon-trash" style="color:#ffffff;margin:0px !important;"></span></a>';
+                    }
+                },
+                {
+                    "data": "InterventionId", "width": "50px", "render": function (data) {
+                        return '<a class="btn-primary btn-sm fa" id="btnPrintIntervention" href="/ApproveReject/PrintIntervention?InterventionId=' + data + '" title="Print"><span class="glyphicon glyphicon-print" style="color:#ffffff;margin:0px !important"></span></a>';
+                    }
+                }]
+        });
+    }
+
+    function GetInterventions(BookingId) {
+        $.ajax({
+            url: '/ApproveReject/GetInterventions?BookingId=' + BookingId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != '') {
+                    $("#lblBookingNo").html(result.BookingNo);
+                    $("#lblBookingDate").html(result.BookDate);
+                    $("#lblJourneyDate").html(result.StartDate);
+                    $("#lblSourceName").html(result.SourceName);
+                    $("#lblJourneyEndDate").html(result.EndDate);
+                    $("#lblPurpose").html(result.Purpose);
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    function GetEmployeeDetails(EmployeeId) {
+        $.ajax({
+            url: '/ApproveReject/GetEmployeeDetails?EmployeeId=' + EmployeeId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != '') {
+                    $("#lblEmployeeNo").html(result.EmployeeCode);
+                    $("#lblEmployeeName").html(result.FirstName);
+                    $("#lblDepartmentName").html(result.DepartmentName);
+                    $("#lblBranchName").html(result.BranchName);
+                    $("#lblMobileNo").html(result.MobileNo);
+                    $("#lblEmailId").html(result.EmailId);
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#FromDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        }).datepicker('update', new Date());
+
+        $("#ToDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        }).datepicker('update', new Date());
+
+        $("#FromDate").val('');
+        $("#ToDate").val('');
+
+        $("input[name='Isactive']").change(function () {
+            $(this).val();
+        });
+
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

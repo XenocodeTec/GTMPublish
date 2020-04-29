@@ -1,0 +1,450 @@
+﻿@model GTM.Models.JobsheetProduct
+
+@{
+    TempData.Keep("ProductDetails");
+}
+
+<div class="row">
+    <div class="col-sm-2">
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductId, htmlAttributes: new { @class = "form-label" })
+            @Html.DropDownListFor(model => model.ProductId, new SelectList(ViewBag.ProductList, "CheckItemId", "CheckListItemName"), "Select", new { @class = "form-control", @onchange = "GetProductAmount();" })
+            @Html.ValidationMessageFor(model => model.ProductId, "", new { @class = "error" })
+            <span id="productid-error" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-sm-1">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "form-label" })
+            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control",@onchange = "CalculateProductAmount();", @onblur = "CalculateProductAmount();" } })
+            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "error" })
+            <span id="quantity-error" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-sm-2">
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductPrice, htmlAttributes: new { @class = "form-label" })
+            @Html.EditorFor(model => model.ProductPrice, new { htmlAttributes = new { @class = "form-control", @onchange = "CalculateProductAmount();", @onblur = "CalculateProductAmount();" } })
+            @Html.ValidationMessageFor(model => model.ProductPrice, "", new { @class = "error" })
+            <span id="quantity-error" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-sm-2">
+        <div class="form-group">
+            @Html.LabelFor(model => model.TaxId, htmlAttributes: new { @class = "form-label" })
+            @Html.DropDownListFor(model => model.TaxId, new SelectList(ViewBag.TaxList, "TaxId", "TaxName"), "Select", new { @class = "form-control", @onchange = "GetTaxPercent();" })
+            @Html.ValidationMessageFor(model => model.TaxId, "", new { @class = "error" })
+            <span id="taxid-error" class="text-danger"></span>
+            <input id="hdnPercent" type="hidden" />
+        </div>
+    </div>
+
+    <div class="col-sm-2">
+        <div class="form-group">
+            @Html.LabelFor(model => model.TaxPrice, htmlAttributes: new { @class = "form-label" })
+            @Html.EditorFor(model => model.TaxPrice, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            @Html.ValidationMessageFor(model => model.TaxPrice, "", new { @class = "error" })
+            <span id="taxprice-error" class="text-danger"></span>
+            @Html.HiddenFor(model => model.TaxPrice)
+        </div>
+    </div>
+
+    <div class="col-sm-2">
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductAmount, htmlAttributes: new { @class = "form-label" })
+            @Html.EditorFor(model => model.ProductAmount, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ProductAmount, "", new { @class = "error" })
+            <span id="productamount-error" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-sm-1">
+        <div class="form-group">
+            <button id="btnAddProduct" type="button" value="Add" class="btn btn-primary"><span class="glyphicon glyphicon-plus" style="color:#ffffff;margin:0px !important"></span></button>
+            <button id="btnSave" type="button" value="Save" style="display:none;" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk" style="color:#ffffff;margin:0px !important">Save</span></button>
+            <button id="btnCancel" type="button" value="Cancel" style="display:none;" class="btn btn-danger"><span class="glyphicon glyphicon-remove" style="color:#ffffff;margin:0px !important">Cancel</span></button>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    @{
+        if (TempData["ProductDetails"] != null)
+        {
+            System.Data.DataTable dataTable = (System.Data.DataTable)TempData["ProductDetails"];
+            <table id="tblProductDetails" class="display table table-striped table-bordered " cellspacing="0" width="100%">
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Product Price</th>
+                    <th>Tax Name</th>
+                    <th>Tax Price</th>
+                    <th>Product Amount</th>
+                    <th></th>
+                </tr>
+
+                @foreach (System.Data.DataRow dr in dataTable.Rows)
+                {
+                    <tr>
+                        <td>
+                            @dr["ProductName"].ToString()
+                        </td>
+                        <td>
+                            @dr["Quantity"].ToString()
+                        </td>
+                        <td>
+                            @dr["ProductPrice"].ToString()
+                        </td>
+                        <td>
+                            @dr["TaxName"].ToString()
+                        </td>
+                        <td>
+                            @dr["TaxPrice"].ToString()
+                            <input id="hdnTaxId" type="hidden" value='@dr["TaxId"].ToString()' />
+                        </td>
+                        <td>
+                            @dr["ProductAmount"].ToString()
+                        </td>
+                        <td>
+                            <a id="btnEdit" class="btn-primary btn-sm fa" title="Edit" href="#"><span class="glyphicon glyphicon-pencil" style="color:#ffffff;margin:0px !important"></span></a>
+                            <a id="btnDelete" class="fa fa-delete btn-danger btn-sm fa" href="#" title="Delete"><span class="glyphicon glyphicon-trash" style="color:#ffffff;margin:0px !important"></span></a>
+                            <input id="hdnProductId" type="hidden" value='@dr["ProductId"].ToString()' />
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    }
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#tblProductDetails").on('click', '#btnEdit', function () {
+            debugger;
+            var currentRow = $(this).closest("tr");
+            var index = $(this).closest("tr").index();
+            var productName = currentRow.find("td:eq(0)").text();
+            var quantity = currentRow.find("td:eq(1)").text();
+            var productPrice = currentRow.find("td:eq(2)").text();
+            var taxPrice = currentRow.find("td:eq(4)").text();
+            var taxId = currentRow.find("td:eq(4) input[type=hidden]").val();
+            var productAmount = currentRow.find("td:eq(5)").text();
+            var productId = currentRow.find("td:eq(6) input[type=hidden]").val();
+            
+            $("#RowId").val(index);
+            $("#ProductId").val(productId.trim());
+            $("#Quantity").val(quantity.trim());
+            $("#ProductPrice").val(productPrice.trim());
+            $("#TaxId").val(taxId.trim());
+            GetTaxPercent();
+            $("#TaxPrice").val(taxPrice.trim());
+            $("#ProductAmount").val(productAmount.trim());
+
+            $("#btnAddProduct").css("display", "none");
+            $("#btnSave").css("display", "");
+            $("#btnCancel").css("display", "");
+        });
+
+        $("#tblProductDetails").on('click', '#btnDelete', function () {
+            if (confirm("Are sure you,You want to delete product details?")) {
+                var currentRow = $(this).closest("tr");
+                var index = $(this).closest("tr").index();
+                var productName = currentRow.find("td:eq(0)").text();
+                var quantity = currentRow.find("td:eq(1)").text();
+                var productPrice = currentRow.find("td:eq(2)").text();
+                var taxName = currentRow.find("td:eq(3)").text();
+                var taxPrice = currentRow.find("td:eq(4)").text();
+                var taxId = currentRow.find("td:eq(4) input[type=hidden]").val();
+                var productAmount = currentRow.find("td:eq(5)").text();
+                var productId = currentRow.find("td:eq(6) input[type=hidden]").val();
+                debugger;
+                $.ajax({
+                    url: '/Jobsheet/_DeleteProductDetails?ProductId=' + productId + '&Quantity=' + quantity,
+                    type: 'GET',
+                    dataType: 'html',
+                    async: false,
+                    contentType: 'application/json; charset=utf-8',
+                    beforeSend: function () {
+                        proccessingWindow();
+                    },
+                    success: function (result) {
+                        $("#divProductDetails").html(result);
+                        $("#ProductId").val('');
+                        $("#Quantity").val('');
+                        $("#ProductPrice").val('');
+                        $("#TaxId").val('');
+                        $("#TaxPrice").val('');
+                        $("#ProductAmount").val('');
+                    },
+                    complete: function (data) {
+                        closeingProccessingWindow();
+                    },
+                    error: function (data) {
+                        toastr.error("Please refresh page.", "GTM");
+                    }
+                });
+
+            }
+        });
+
+        $("#btnCancel").click(function () {
+            $("#ProductId").val('');
+            $("#Quantity").val('');
+            $("#ProductPrice").val('');
+            $("#TaxId").val('');
+            $("#TaxPrice").val('');
+            $("#ProductAmount").val('');
+
+            $("#btnAddProduct").css("display", "");
+            $("#btnSave").css("display", "none");
+            $("#btnCancel").css("display", "none");
+        });
+
+        $("#btnSave").click(function () {
+            setTimeout(function () {
+                proccessingWindow();
+                SaveProductDetail();
+                closeingProccessingWindow();
+            }, 200);
+        });
+
+        function SaveProductDetail() {
+            var productId = $("#ProductId").val();
+            var productName = $("#ProductId").find('option:selected').text();
+            var quantity = $("#Quantity").val();
+
+            if (quantity.value == "") {
+                $("#quantity-error").text("Please enter quantity");
+                return;
+            }
+
+            $.ajax({
+                url: '/Jobsheet/_AddProductDetails?ProductId=' + productId + '&ProductName=' + productName + '&Quantity=' + quantity,
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    if (result != '') {
+                        $("#ProductDetails").html(result);
+
+                        $("#ProductId").val('');
+                        $("#Quantity").val('');
+                        $("#ProductPrice").val('');
+                        $("#TaxId").val('');
+                        $("#TaxPrice").val('');
+                        $("#ProductAmount").val('');
+                    }
+                },
+                error: function (data) { }
+            });
+        }
+
+        $("#btnSave").click(function () {
+            setTimeout(function () {
+                proccessingWindow();
+                EditProductDetails();
+                closeingProccessingWindow();
+            }, 200);
+        })
+
+        function EditProductDetails() {
+            var productId = $("#ProductId");
+            var quantity = $("#Quantity");
+            var productPrice = $("#ProductPrice");
+            var taxId = $("#TaxId");
+            var taxAmount = $("#TaxPrice");
+            var productAmount = $("#ProductAmount");
+            var productText = "";
+            var taxText = '';
+
+            if (productId[0].value == "") {
+                $("#productid-error").text("Please select product");
+                return;
+            }
+
+            if (quantity[0].value == "") {
+                $("#quantity-error").text("Please enter quantity");
+                return;
+            }
+
+            if (taxId[0].value == "") {
+                $("#taxid-error").text("Please select tax name");
+                return;
+            }
+
+            if (productId[0].value != "0") {
+                productText = $("#ProductId").find('option:selected').text();
+            }
+
+            if (taxId[0].value != "0") {
+                taxText = $("#TaxId").find('option:selected').text();
+            }
+
+            $("#productid-error").text("");
+            $("#quantity-error").text("");
+
+            $.ajax({
+                url: '/Jobsheet/_EditProductDetails?ProductId=' + productId[0].value + '&ProductName=' + productText + '&ProductPrice=' + productPrice[0].value + '&Quantity=' + quantity[0].value + '&TaxId=' + taxId[0].value + '&TaxName=' + taxText + '&TaxPrice=' + taxAmount[0].value + '&ProductAmount=' + productAmount[0].value,
+                type: 'GET',
+                dataType: 'html',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function () {
+                    proccessingWindow();
+                },
+                success: function (result) {
+                    $("#divProductDetails").html(result);
+                    $("#ProductId").val('');
+                    $("#Quantity").val('');
+                    $("#ProductPrice").val('');
+                    $("#TaxId").val('');
+                    $("#TaxPrice").val('');
+                    $("#ProductAmount").val('');
+                },
+                complete: function (data) {
+                    closeingProccessingWindow();
+                },
+                error: function (data) {
+                    toastr.error("Please refresh page.", "GTM");
+                }
+            });
+        }
+
+        $("#btnAddProduct").click(function () {
+            setTimeout(function () {
+                $("#btnAddProduct").attr("disabled", true);
+                proccessingWindow();
+                SaveProductDetails();
+                closeingProccessingWindow();
+                $("#btnAddProduct").attr("disabled", false);
+            }, 200);
+        });
+
+        function SaveProductDetails() {
+            var productId = $("#ProductId");
+            var quantity = $("#Quantity");
+            var productPrice = $("#ProductPrice");
+            var taxId = $("#TaxId");
+            var taxAmount = $("#TaxPrice");
+            var productAmount = $("#ProductAmount");
+            var productText = "";
+            var taxText = '';
+
+            if (productId[0].value == "") {
+                $("#productid-error").text("Please select product");
+                return;
+            }
+
+            if (quantity[0].value == "") {
+                $("#quantity-error").text("Please enter quantity");
+                return;
+            }
+
+            if (taxId[0].value == "") {
+                $("#taxid-error").text("Please select tax name");
+                return;
+            }
+
+            if (productId[0].value != "0") {
+                productText = $("#ProductId").find('option:selected').text();
+            }
+
+            if (taxId[0].value != "0") {
+                taxText = $("#TaxId").find('option:selected').text();
+            }
+
+            $("#productid-error").text("");
+            $("#quantity-error").text("");
+
+            $.ajax({
+                url: '/Jobsheet/_AddProductDetails?ProductId=' + productId[0].value + '&ProductName=' + productText + '&ProductPrice=' + productPrice[0].value + '&Quantity=' + quantity[0].value + '&TaxId=' + taxId[0].value + '&TaxName=' + taxText + '&TaxPrice=' + taxAmount[0].value + '&ProductAmount=' + productAmount[0].value,
+                type: 'GET',
+                dataType: 'html',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function () {
+                    proccessingWindow();
+                },
+                success: function (result) {
+                    $("#divProductDetails").html(result);
+                    $("#ProductId").val('');
+                    $("#Quantity").val('');
+                    $("#ProductPrice").val('');
+                    $("#TaxId").val('');
+                    $("#TaxPrice").val('');
+                    $("#ProductAmount").val('');
+                },
+                complete: function (data) {
+                    closeingProccessingWindow();
+                },
+                error: function (data) {
+                    toastr.error("Please refresh page.", "GTM");
+                }
+            });
+        }
+    });
+
+    function GetProductAmount() {
+        var productid = $("#ProductId").val();
+        $.ajax({
+            url: '/Jobsheet/GetProductPrice?ProductId=' + productid,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != '') {
+                    $("#Quantity").val(1);
+                    $("#ProductPrice").val(result);
+                    CalculateProductAmount();
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    function GetTaxPercent() {
+        var taxId = $("#TaxId").val();
+        $.ajax({
+            url: '/Jobsheet/GetTaxPrice?TaxId=' + taxId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                debugger;
+                if (result != '') {
+                    $("#hdnPercent").val(result);
+                    CalculateProductAmount();
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    function CalculateProductAmount() {
+        var productPrice = 0; var quantity = 0; var taxPercent = 0; var productAmount = 0;
+        debugger;
+        if ($("#ProductPrice").val() != '') {
+            productPrice = $("#ProductPrice").val();
+        }
+
+        if ($("#Quantity").val() != '') {
+            quantity = $("#Quantity").val();
+        }
+
+        if ($("#TaxId") != undefined) {
+            if ($("#TaxId").val() != '') {
+                taxPercent = $("#hdnPercent").val();
+            }
+        }
+        productAmount = (parseFloat(productPrice) + (parseFloat(productPrice) * parseFloat(taxPercent) / 100)) * quantity;
+
+        $("#TaxPrice").val((parseFloat(productPrice) * parseFloat(taxPercent) / 100));
+        $("#ProductAmount").val(productAmount);
+    }
+</script>

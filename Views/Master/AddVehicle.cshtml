@@ -1,0 +1,451 @@
+﻿@model GTM.Models.VehicleModel
+@{
+    ViewBag.Title = "Add Vehicle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/Vehicle" title="@GTM.Resources.Resource.VehicleDetail @GTM.Resources.Resource.List">@GTM.Resources.Resource.VehicleDetail</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddVehicle" title="@GTM.Resources.Resource.Add @GTM.Resources.Resource.VehicleDetail">@GTM.Resources.Resource.Add @GTM.Resources.Resource.VehicleDetail</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Html.BeginForm("AddVehicle", "Master", FormMethod.Post, new { enctype = "multipart/form-data", Id = "AddVehicle" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add @GTM.Resources.Resource.VehicleDetail</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Master/Vehicle">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="formone-center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.VehicleId)
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label(GTM.Resources.Resource.VehicleType, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.VehicleTypeId, new SelectList(ViewBag.VehicleTypeList, "VehicleTypeId", "VehicleTypeName"), "Select Vehicle Type", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.VehicleTypeId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label(GTM.Resources.Resource.Make, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.MakeId, new SelectList(ViewBag.MakeList, "MakeId", "MakeName"), "Select Make", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.MakeId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label(GTM.Resources.Resource.Model, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.MakeModelId, new SelectList(ViewBag.MakeModelList, "MakeModelId", "ModelName"), "Select Make Model", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.MakeModelId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label(GTM.Resources.Resource.Color, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.ColorId, new SelectList(ViewBag.ColorList, "ColorId", "ColorName"), "Select Color", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ColorId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label(GTM.Resources.Resource.Fuel, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.FuelId, new SelectList(ViewBag.FuelList, "FuelId", "FuelName"), "Select Fuel Type", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.FuelId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.VehicleRegistrationName, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.VehicleRegistrationName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.VehicleRegistrationName, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.VehicleNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.VehicleNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.VehicleNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ChasisNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.ChasisNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ChasisNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.EngineNo, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.EngineNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.EngineNo, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FinanceBankName, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.FinanceBankName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.FinanceBankName, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FinanceFrom, htmlAttributes: new { @class = "form-label" })
+                                        <div id="FinanceFrom" class="input-group date" data-date-format="dd-mm-yyyy">
+                                            @Html.EditorFor(model => model.FinanceFrom, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            @Html.HiddenFor(model => model.FinanceFrom)
+                                            @Html.ValidationMessageFor(model => model.FinanceFrom, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+                                
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FinanceTo, htmlAttributes: new { @class = "form-label" })
+                                        <div id="FinanceTo" class="input-group date" data-date-format="dd-mm-yyyy">
+                                            @Html.EditorFor(model => model.FinanceTo, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            @Html.HiddenFor(model => model.FinanceTo)
+                                            @Html.ValidationMessageFor(model => model.FinanceTo, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.InsuranceTypeId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.InsuranceTypeId, new SelectList(ViewBag.InsuranceTypeList, "InsuranceTypeId", "InsuranceTypeName"), "Select Insurance Type", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.InsuranceCompanyName, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.InsuranceCompanyName, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.InsuranceCompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.InsuranceCompanyName, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.InsuranceFrom, htmlAttributes: new { @class = "form-label" })
+                                        <div id="InsuranceFrom" class="input-group date" data-date-format="dd-mm-yyyy">
+                                            @Html.EditorFor(model => model.InsuranceFrom, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            @Html.HiddenFor(model => model.InsuranceFrom)
+                                            @Html.ValidationMessageFor(model => model.InsuranceFrom, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.InsuranceTo, htmlAttributes: new { @class = "form-label" })
+                                        <div id="InsuranceTo" class="input-group date" data-date-format="dd-mm-yyyy">
+                                            @Html.EditorFor(model => model.InsuranceTo, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            @Html.HiddenFor(model => model.InsuranceTo)
+                                            @Html.ValidationMessageFor(model => model.InsuranceTo, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.InsuranceAmount, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.InsuranceAmount, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.InsuranceAmount, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            @Html.LabelFor(model => model.IsAc, htmlAttributes: new { @class = "form-label" })
+                                            @Html.CheckBoxFor(model => model.IsAc)
+                                            @Html.ValidationMessageFor(model => model.IsAc, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            @Html.LabelFor(model => model.IsFinance, htmlAttributes: new { @class = "form-label" })
+                                            @Html.CheckBoxFor(model => model.IsFinance)
+                                            @Html.ValidationMessageFor(model => model.IsFinance, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            @Html.LabelFor(model => model.IsGPSTracker, htmlAttributes: new { @class = "form-label" })
+                                            @Html.CheckBoxFor(model => model.IsGPSTracker)
+                                            @Html.ValidationMessageFor(model => model.IsGPSTracker, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.GPSDeviceIMEI, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.GPSDeviceIMEI, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.GPSDeviceIMEI, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MinimumFare, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.MinimumFare, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MinimumFare, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NoofWheels, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.NoofWheels, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.NoofWheels, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.PermitId, htmlAttributes: new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.PermitId, new SelectList(ViewBag.PermitList, "PermitId", "PermitName"), "Select Permit Type", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.PermitId, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.PerMonth, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.PerMonth, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PerMonth, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.RentPerDay, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.RentPerDay, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.RentPerDay, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.RentPerKM, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.RentPerKM, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.RentPerKM, "", new { @class = "error" })
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SittingCapacity, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.SittingCapacity, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.SittingCapacity, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.OtherDetails, htmlAttributes: new { @class = "form-label" })
+                                        @Html.TextAreaFor(model => model.OtherDetails, new { @class = "text-height" })
+                                        @Html.ValidationMessageFor(model => model.OtherDetails, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ServiceDetails, htmlAttributes: new { @class = "form-label" })
+                                        @Html.TextAreaFor(model => model.ServiceDetails, new { @class = "text-height" })
+                                        @Html.ValidationMessageFor(model => model.ServiceDetails, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.VehicleAverage, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.VehicleAverage, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.VehicleAverage, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.WithAC, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.WithAC, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.WithAC, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.WithoutAC, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.WithoutAC, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.WithoutAC, "", new { @class = "error" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.WithFuel, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.WithFuel, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.WithFuel, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.WithoutFuel, htmlAttributes: new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.WithoutFuel, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.WithoutFuel, "", new { @class = "error" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            @Html.CheckBoxFor(model => model.IsActive)
+                                            @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "error" })
+                                        </div>
+                                        @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group  m-t-2">
+                                        <button type="submit" value="Save" class="btn btn-primary">
+                                            @{var btntext = ""; if (Model.VehicleId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                        </button>
+                                        <a href="~/Master/Vehicle" class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                                }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    $("#VehicleName").keyup(function () {
+        CheckVehicleName($("#VehicleName").val(), $("#VehicleId").val(), $("#BranchId").val());
+    });
+
+    $("#VehicleName").blur(function () {
+        if ($('#VehicleName-error').html() == '') {
+            CheckVehicleName($("#VehicleName").val(), $("#VehicleId").val(), $("#BranchId").val());
+        }
+    });
+
+    function CheckVehicleName(VehicleName, VehicleId, BranchId) {
+        $.ajax({
+            url: '/Master/CheckVehicleName?VehicleName=' + VehicleName + '&VehicleId=' + VehicleId + '&BranchId=' + BranchId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    toastr.error(result.message, "GTM");
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#FinanceFrom").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startDate: '+d'
+        }).datepicker('update', new Date());
+
+        $("#InsuranceFrom").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startDate: '+d'
+        }).datepicker('update', new Date());
+
+        $("#FinanceFrom").datepicker({
+            todayBtn: 1,
+            autoclose: true,
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#FinanceTo').datepicker('setStartDate', minDate);
+        });
+
+        $("#InsuranceFrom").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#InsuranceTo').datepicker('setStartDate', minDate);
+        });
+
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>

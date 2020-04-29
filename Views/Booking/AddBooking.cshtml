@@ -1,0 +1,372 @@
+﻿@model GTM.Models.BookingModel
+@{
+    ViewBag.Title = "Add Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul id="breadcrumb">
+    <li>
+        <span class="entypo-home"></span>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/Booking" title="Booking @GTM.Resources.Resource.List">Booking</a>
+    </li>
+    <li>
+        <i class="fa fa-lg fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="~/Master/AddBooking" title="@GTM.Resources.Resource.Add Booking">@GTM.Resources.Resource.Add Booking</a>
+    </li>
+    <li class="pull-right" style="display:none;">
+        <div class="input-group input-widget">
+            <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
+        </div>
+    </li>
+</ul>
+
+@using (Ajax.BeginForm("AddBooking", "Booking", new AjaxOptions { HttpMethod = "POST", OnBegin = "Begin", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
+{
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="basicClose">
+                    <div class="title-alt">
+                        <h6>@GTM.Resources.Resource.Add Booking</h6>
+                        <div class="titleClose">
+                            <a class="gone" href="~/Booking/Booking">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#Drip">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="body-nest" id="basic">
+                        <div class="formone-center">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "error" })
+                            @Html.HiddenFor(model => model.BookingId)
+                            <div class="row m-0">
+                                <div class="div-employee divheight">
+                                    <div class="title-head">
+                                        <h6>Employee Details</h6>
+                                    </div>
+                                    <div class="div-forms">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.EmployeeId, htmlAttributes: new { @class = "form-label" })
+                                            @Html.DropDownListFor(model => model.EmployeeId, new SelectList(ViewBag.EmployeeList, "EmployeeId", "FirstName"), "Select", new { @class = "form-control", onchange = "javascript:GetEmployeeDetails();" })
+                                            @Html.ValidationMessageFor(model => model.EmployeeId, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.EmployeeNo, htmlAttributes: new { @class = "form-label" })
+                                            @Html.EditorFor(model => model.EmployeeNo, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.EmployeeNo, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.RFID, htmlAttributes: new { @class = "form-label" })
+                                            @Html.EditorFor(model => model.RFID, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.RFID, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.EmployeeType, htmlAttributes: new { @class = "form-label" })
+                                            @Html.EditorFor(model => model.EmployeeType, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.EmployeeType, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.DepartmentName, htmlAttributes: new { @class = "form-label" })
+                                            @Html.EditorFor(model => model.DepartmentName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.DepartmentName, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.BranchName, htmlAttributes: new { @class = "form-label" })
+                                            @Html.EditorFor(model => model.BranchName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.BranchName, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "form-label" })
+                                            @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.MobileNo, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.EmailId, htmlAttributes: new { @class = "form-label" })
+                                            @Html.EditorFor(model => model.EmailId, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="div-booking divheight">
+                                    <div class="title-head">
+                                        <h6>Booking Details</h6>
+                                    </div>
+                                    <div class="div-forms">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.BookingNo, htmlAttributes: new { @class = "form-label" })
+                                            @Html.EditorFor(model => model.BookingNo, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                            @Html.HiddenFor(model => model.BookingNo)
+                                            @Html.ValidationMessageFor(model => model.BookingNo, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.BookingDate, htmlAttributes: new { @class = "form-label" })
+                                            <div id="BookingDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                                @Html.EditorFor(model => model.BookingDate, new { htmlAttributes = new { @class = "form-control" } })
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                @Html.HiddenFor(model => model.BookingDate)
+                                                @Html.ValidationMessageFor(model => model.BookingDate, "", new { @class = "error" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.SourceId, htmlAttributes: new { @class = "form-label" })
+                                            @Html.DropDownListFor(model => model.SourceId, new SelectList(ViewBag.SourceList, "DestinationId", "DestinationName"), "Select", new { @class = "form-control", onchange = "javascript:ValidateSource();" })
+                                            @Html.ValidationMessageFor(model => model.SourceId, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.JourneyDate, htmlAttributes: new { @class = "form-label" })
+                                            <div id="JourneyDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                                <input id="txtJourneyDate" class="form-control" type="text" />
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                @Html.HiddenFor(model => model.JourneyDate)
+                                                @Html.ValidationMessageFor(model => model.JourneyDate, "", new { @class = "error" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.JourneyTime, htmlAttributes: new { @class = "form-label" })
+                                            <div class="input-group bootstrap-timepicker timepicker">
+                                                @Html.EditorFor(model => model.JourneyTime, new { htmlAttributes = new { @class = "form-control input-small" } })
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                                @Html.HiddenFor(model => model.JourneyTime)
+                                                @Html.ValidationMessageFor(model => model.JourneyTime, "", new { @class = "error" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.DestinationId, htmlAttributes: new { @class = "form-label" })
+                                            @Html.DropDownListFor(model => model.DestinationId, new SelectList(ViewBag.SourceList, "DestinationId", "DestinationName"), "Select", new { @class = "form-control", onchange = "javascript:ValidateSource();" })
+                                            @Html.ValidationMessageFor(model => model.DestinationId, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ReturnDate, htmlAttributes: new { @class = "form-label" })
+                                            <div id="ReturnDate" class="input-group date" data-date-format="dd-mm-yyyy">
+                                                <input id="txtReturnDate" class="form-control" type="text" />
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                @Html.HiddenFor(model => model.ReturnDate)
+                                                @Html.ValidationMessageFor(model => model.ReturnDate, "", new { @class = "error" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ReturnTime, htmlAttributes: new { @class = "form-label" })
+                                            <div class="input-group bootstrap-timepicker timepicker">
+                                                @Html.EditorFor(model => model.ReturnTime, new { htmlAttributes = new { @class = "form-control input-small" } })
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                                @Html.HiddenFor(model => model.ReturnTime)
+                                                @Html.ValidationMessageFor(model => model.ReturnTime, "", new { @class = "error" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.NoofPassanger, htmlAttributes: new { @class = "form-label" })
+                                            @Html.EditorFor(model => model.NoofPassanger, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NoofPassanger, "", new { @class = "error" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Purpose, htmlAttributes: new { @class = "form-label" })
+                                            @Html.TextAreaFor(model => model.Purpose, new { @class = "text-height" })
+                                            @Html.ValidationMessageFor(model => model.Purpose, "", new { @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 p-t-23 float-center">
+                                    <div class="form-group">
+                                        <button type="submit" value="Save" class="btn btn-primary">
+                                            @{var btntext = ""; if (Model.BookingId == 0) { btntext = "Save"; } else { btntext = "Update"; }} @btntext
+                                        </button>
+                                        <a href="~/Booking/Booking" class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                                }
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/unobtrusive")
+
+<script type="text/javascript">
+    function OnSuccess(data) {
+        toastr.success(data, "GTM");
+        window.location.href = "/Booking/Booking";
+        return;
+    }
+
+    function OnFailure(data) {
+        toastr.warning("Error occured while adding records", "GTM");
+    }
+
+    function Begin() {
+        var employeeId = $("#EmployeeId").val();
+        var journeyDate = $("#txtJourneyDate").val();
+        var returnDate = $("#txtReturnDate").val();
+
+        $.ajax({
+            url: '/Booking/ValidateBooking?EmployeeId=' + employeeId + '&JourneyDate=' + journeyDate + '&ReturnDate=' + returnDate,
+            type: 'GET',
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    toastr.error(result.message, "GTM");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            },
+            error: function (data) { }
+        });
+
+        return false;
+    }
+
+    function FillState() {
+        var selectedval = $("#CountryId").val();
+        CommonScript.FillState(selectedval);
+    }
+
+    function FillCity() {
+        var selectedval = $("#StateId").val();
+        CommonScript.FillCity(selectedval);
+    }
+
+    $("#MobileName").keyup(function () {
+        CheckBookingName($("#MobileName").val(), $("#BookingId").val(), $("#BranchId").val());
+    });
+
+    $("#MobileName").blur(function () {
+        if ($('#MobileName-error').html() == '') {
+            CheckBookingName($("#MobileName").val(), $("#BookingId").val(), $("#BranchId").val());
+        }
+    });
+
+    function CheckBookingName(MobileName, BookingId) {
+        $.ajax({
+            url: '/Master/CheckBookingName?MobileName=' + MobileName + '&BookingId=' + BookingId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result.message != '') {
+                    toastr.error(result.message, "GTM");
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    function GetEmployeeDetails() {
+        var EmployeeId = $("#EmployeeId").val();
+        $.ajax({
+            url: '/Booking/GetEmployeeDetails?EmployeeId=' + EmployeeId,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result != '') {
+                    $("#EmployeeNo").val(result.EmployeeCode);
+                    $("#RFID").val(result.RFID);
+                    $("#EmployeeType").val(result.EmployeeTypeName);
+                    $("#DepartmentName").val(result.DepartmentName);
+                    $("#BranchName").val(result.BranchName);
+                    $("#MobileNo").val(result.MobileNo);
+                    $("#EmailId").val(result.EmailId);
+                }
+            },
+            error: function (data) { }
+        });
+    }
+
+    function ValidateSource() {
+        var sourceId = $("#SourceId").val();
+        var destinationId = $("#DestinationId").val();
+
+        if (sourceId == destinationId) {
+            toastr.warning("Source Name and Destination Name can not be same", "GTM");
+        }
+    }
+
+    $(document).ready(function () {
+        $("#BookingDate").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startDate: '+d',
+            endDate: '+d'
+        }).datepicker('update', new Date());
+
+        $("#BookingDate").datepicker({
+            todayBtn: 1,
+            autoclose: true,
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#JourneyDate').datepicker('setStartDate', minDate);
+        });
+
+        $("#JourneyDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#ReturnDate').datepicker('setStartDate', minDate);
+        });
+
+        $('#JourneyTime').timepicker();
+
+        $('#ReturnTime').timepicker();
+
+        var msgtype = '@TempData["MessageType"]';
+        var msg = '@TempData["Message"]';
+
+        if (msgtype != null) {
+            if (msgtype != '') {
+                if (msgtype == "Success") {
+                    toastr.success(msg, "GTM");
+                }
+                else if (msgtype == "Error") {
+                    toastr.error(msg, "GTM");
+                }
+            }
+        }
+    });
+</script>
+
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
+    </script>
+}
